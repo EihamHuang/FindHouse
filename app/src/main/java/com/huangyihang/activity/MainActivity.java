@@ -1,6 +1,7 @@
 package com.huangyihang.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import com.huangyihang.data.News;
 import com.huangyihang.network.NetworkClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -29,7 +31,13 @@ public class MainActivity extends AppCompatActivity {
     private String appkey = "d3180a0872444771942636c146a32aed";
     protected EditText et_Search;
     protected TextView tv_Search;
-    protected Button searchButton;
+    protected Button btn_Search;
+
+    private List<News> newsList = new ArrayList<News>();
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
         et_Search = findViewById(R.id.et_search);
         tv_Search = findViewById(R.id.tv_search);
-        searchButton = findViewById(R.id.searchButton);
+        btn_Search = findViewById(R.id.btn_search);
 
         tv_Search.setMovementMethod(ScrollingMovementMethod.getInstance());
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        btn_Search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -111,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), tip, Toast.LENGTH_SHORT).show();
             return false;
         }
-
         return true;
     }
 }
