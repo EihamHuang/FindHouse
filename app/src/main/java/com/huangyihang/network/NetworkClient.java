@@ -9,7 +9,7 @@ import okhttp3.Request;
  * - @Time:  2019-08-14 15:54
  */
 public class NetworkClient {
-    private static NetworkClient networkClient;
+
     public static void sendRequest(String address, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

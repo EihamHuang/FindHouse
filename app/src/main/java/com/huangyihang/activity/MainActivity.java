@@ -1,8 +1,10 @@
 package com.huangyihang.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,11 +20,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.huangyihang.data.ImageUtils;
+import com.huangyihang.data.JsonData;
 import com.huangyihang.data.News;
+import com.huangyihang.data.NewsAdapter;
+import com.huangyihang.data.SpacesItemDecoration;
 import com.huangyihang.network.NetworkClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.Call;
@@ -29,15 +37,16 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     private String appkey = "d3180a0872444771942636c146a32aed";
+    // 时政新闻接口
+    private String url = "http://api.avatardata.cn/ActNews/Query?key=" + appkey + "&keyword=";
+
     protected EditText et_Search;
-    protected TextView tv_Search;
     protected Button btn_Search;
 
-    private List<News> newsList = new ArrayList<News>();
-
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-
+    private List<News> newsList = new ArrayList<>();
+    private ImageUtils imageUtils;
+    private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
+    private boolean hasResult = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         et_Search = findViewById(R.id.et_search);
-        tv_Search = findViewById(R.id.tv_search);
         btn_Search = findViewById(R.id.btn_search);
-
-        tv_Search.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         btn_Search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,10 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(isInputValid()){
                     String search = et_Search.getText().toString();
-                    // 时政新闻
-                    String url = "http://api.avatardata.cn/ActNews/Query?key=" + appkey + "&keyword=" + search;
-                    // 天气
-                    String url2 = "http://api.jirengu.com/getWeather.php?city=北京";
+                    url += search;
                     NetworkClient.sendRequest(url , new okhttp3.Callback() {
 
                         @Override
@@ -76,16 +79,25 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            String responseJsonData = response.body().string();
                             int code = response.code();
-                            final String result = parseJSON(responseJsonData);
+                            String responseJsonData = response.body().string();
+                            // 解析json
+                            hasResult = parseJSON(responseJsonData);
                             Log.d("okhttp", "code: " + code);
                             Log.d("okhttp", "body: " + responseJsonData);
-
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    tv_Search.setText(result);
+                                    if(hasResult){
+                                        // 加载图片
+                                        initImg(newsList);
+                                        // 加载RecyclerView
+                                        initRecyclerView(newsList);
+                                    }
+                                    //  该关键词没有结果
+                                    else{
+                                        Toast.makeText(MainActivity.this, "该关键词暂时无内容，请输入其他关键词～", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
                         }
@@ -97,20 +109,39 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private String parseJSON(String jsonData){
-        StringBuilder result = new StringBuilder();
-        JsonElement jsonElement = new JsonParser().parse(jsonData);
-        String data = jsonElement.getAsJsonObject().get("result").toString();
+    private boolean parseJSON(String jsonData) {
         Gson gson = new Gson();
-        List<News> newsList = gson.fromJson(data, new TypeToken<List<News>>(){}.getType());
-        for(News news : newsList){
-            result.append("title=" + news.getTitle() + " content=" + news.getPdate() + " src=" + news.getSrc()
-                    + " pdate_src=" + news.getPdate_src() + " img=" + news.getImg() + " url=" + news.getUrl() + "\n");
+        JsonData<News> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<News>>(){}.getType());
+        if(null == parseResult.getResult()) {
+            return false;
+        }else{
+            newsList = parseResult.getResult();
+            return true;
         }
-        return result.toString();
     }
 
-    private boolean isInputValid(){
+    private void initImg(List<News> newsList){
+        if(null == newsList)
+            return;
+        imageUtils = ImageUtils.getIntance();
+        for(News news : newsList){
+            Bitmap srcBitmap = imageUtils.getBitmap(news.getImg());
+            news.setBitmap(srcBitmap);
+        }
+    }
+
+    private void initRecyclerView(List<News> newsList) {
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        NewsAdapter adapter = new NewsAdapter(newsList);
+        stringIntegerHashMap.put(SpacesItemDecoration.TOP_DECORATION,50);//顶部间距
+        stringIntegerHashMap.put(SpacesItemDecoration.BOTTOM_DECORATION,50);//底部间距
+        recyclerView.addItemDecoration(new SpacesItemDecoration(stringIntegerHashMap));
+        recyclerView.setAdapter(adapter);
+    }
+
+    private boolean isInputValid() {
         String tip = null;
         if(TextUtils.isEmpty(et_Search.getText())){
             tip = "搜索内容不能为空";

@@ -1,5 +1,9 @@
 package com.huangyihang.data;
 
+import android.graphics.Bitmap;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -14,8 +18,10 @@ public class News implements Serializable {
     private String pdate;
     private String src;
     private String img;
+    private Bitmap bitmap;
     private String url;
-    private String pdate_src;
+    @SerializedName("pdate_src")
+    private String ptime;
 
     public String getId() {
         return id;
@@ -73,11 +79,19 @@ public class News implements Serializable {
         this.url = url;
     }
 
-    public String getPdate_src() {
-        return pdate_src;
+    public String getPtime() {
+        return ptime;
     }
 
-    public void setPdate_src(String pdate_src) {
-        this.pdate_src = pdate_src;
+    public void setPtime(String ptime) {
+        this.ptime = ptime;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }
