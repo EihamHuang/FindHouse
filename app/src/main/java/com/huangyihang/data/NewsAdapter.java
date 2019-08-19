@@ -26,6 +26,7 @@ import static com.huangyihang.activity.MainActivity.MSG_IMAGE;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private List<News> mNewsList;
     private OnItemClickListener mOnItemClickListener;
+    private Handler handler;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView newsImg;
@@ -60,7 +61,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.newsImg.setImageResource(R.drawable.ic_launcher_background);
         holder.newsImg.setTag(news.getImg());
 
-        Handler handler = new Handler() {
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
@@ -75,7 +76,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             }
         };
 
-        holder.newsTitle.setText("标题：" + news.getTitle());
+        holder.newsTitle.setText(news.getTitle());
         holder.newsSrc.setText("来源：" + news.getSrc());
         holder.newsPtime.setText("日期：" + news.getPtime());
 

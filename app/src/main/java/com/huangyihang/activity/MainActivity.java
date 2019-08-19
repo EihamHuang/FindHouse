@@ -1,6 +1,7 @@
 package com.huangyihang.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -133,11 +134,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         imageUtils = ImageUtils.getIntance();
         for(News news : newsList){
-            Bitmap srcBitmap = imageUtils.getBitmap(news.getImg());
-            Message message = new Message();
-            message.what = MSG_IMAGE;
-            message.obj = srcBitmap;
-            handler.sendMessage(message);
+            imageUtils.getBitmap(news.getImg());
         }
     }
 
@@ -145,9 +142,10 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this,DividerItemDecoration.VERTICAL));
         NewsAdapter adapter = new NewsAdapter(newsList);
-        stringIntegerHashMap.put(SpacesItemDecoration.TOP_DECORATION,50);//顶部间距
-        stringIntegerHashMap.put(SpacesItemDecoration.BOTTOM_DECORATION,50);//底部间距
+        stringIntegerHashMap.put(SpacesItemDecoration.TOP_DECORATION,25);//顶部间距
+        stringIntegerHashMap.put(SpacesItemDecoration.BOTTOM_DECORATION,25);//底部间距
         recyclerView.addItemDecoration(new SpacesItemDecoration(stringIntegerHashMap));
         recyclerView.setAdapter(adapter);
 

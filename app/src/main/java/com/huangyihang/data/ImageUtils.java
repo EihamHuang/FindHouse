@@ -2,6 +2,8 @@ package com.huangyihang.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -15,6 +17,8 @@ import java.io.InputStream;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static com.huangyihang.activity.MainActivity.MSG_IMAGE;
+
 /**
  * - @Description:  图片处理
  * - @Author:  huangyihang
@@ -22,6 +26,7 @@ import okhttp3.Response;
  */
 public class ImageUtils {
     private static Bitmap bitmap = null;
+    private Handler handler;
 
     private ImageUtils() {}
     private static final ImageUtils imageUtils = new ImageUtils();
@@ -29,9 +34,9 @@ public class ImageUtils {
         return imageUtils;
     }
 
-    public Bitmap getBitmap(String url) {
+    public void getBitmap(String url) {
         if(TextUtils.isEmpty(url)){
-            return null;
+            return;
         }
         NetworkClient.sendRequest(url, new okhttp3.Callback(){
             @Override
@@ -44,9 +49,17 @@ public class ImageUtils {
                 Log.d("img", "code: " + code);
                 InputStream in = response.body().byteStream();
                 bitmap = BitmapFactory.decodeStream(in);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Message message = new Message();
+                        message.what = MSG_IMAGE;
+                        message.obj = bitmap;
+                        handler.sendMessage(message);
+                    }
+                }).start();
             }
         });
-        return bitmap;
     }
 
     public byte[] bitmap2Bytes(Bitmap bm) {
