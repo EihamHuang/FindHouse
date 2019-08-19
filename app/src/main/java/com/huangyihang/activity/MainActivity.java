@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -36,6 +37,9 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String NEWS_KEY = "key_news";
+
+    // appkey
     private String appkey = "d3180a0872444771942636c146a32aed";
     // 时政新闻接口
     private String url = "http://api.avatardata.cn/ActNews/Query?key=" + appkey + "&keyword=";
@@ -130,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initRecyclerView(List<News> newsList) {
+    private void initRecyclerView(final List<News> newsList) {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -139,6 +143,21 @@ public class MainActivity extends AppCompatActivity {
         stringIntegerHashMap.put(SpacesItemDecoration.BOTTOM_DECORATION,50);//底部间距
         recyclerView.addItemDecoration(new SpacesItemDecoration(stringIntegerHashMap));
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new NewsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(MainActivity.this, "点击新闻： " + position,
+                        Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(NEWS_KEY, newsList.get(position));
+                Intent intent = new Intent(MainActivity.this, ContentActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+
+        });
+
     }
 
     private boolean isInputValid() {

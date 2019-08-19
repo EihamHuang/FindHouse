@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private List<News> mNewsList;
+    private OnItemClickListener mOnItemClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView newsImg;
@@ -47,7 +48,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         News news = mNewsList.get(position);
         if(null == news.getBitmap()){
             holder.newsImg.setImageResource(R.drawable.ic_launcher_background);
@@ -58,10 +59,30 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.newsTitle.setText("标题：" + news.getTitle());
         holder.newsSrc.setText("来源：" + news.getSrc());
         holder.newsPtime.setText("日期：" + news.getPtime());
+
+        if (mOnItemClickListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnItemClickListener.onItemClick(holder.itemView, position);
+                }
+            });
+        }
+
     }
 
     @Override
     public int getItemCount() {
         return mNewsList.size();
     }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mOnItemClickListener = listener;
+    }
+
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
 }
