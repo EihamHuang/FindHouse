@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -38,6 +40,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     public static final String NEWS_KEY = "key_news";
+    public static final int MSG_IMAGE = 1;
 
     // appkey
     private String appkey = "d3180a0872444771942636c146a32aed";
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageUtils imageUtils;
     private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
     private boolean hasResult = false;
+    private static Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +134,10 @@ public class MainActivity extends AppCompatActivity {
         imageUtils = ImageUtils.getIntance();
         for(News news : newsList){
             Bitmap srcBitmap = imageUtils.getBitmap(news.getImg());
-            news.setBitmap(srcBitmap);
+            Message message = new Message();
+            message.what = MSG_IMAGE;
+            message.obj = srcBitmap;
+            handler.sendMessage(message);
         }
     }
 

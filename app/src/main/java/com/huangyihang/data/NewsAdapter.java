@@ -1,5 +1,8 @@
 package com.huangyihang.data;
 
+import android.graphics.Bitmap;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.huangyihang.activity.R;
 
 import java.util.List;
+import android.os.Handler;
+
+import static com.huangyihang.activity.MainActivity.MSG_IMAGE;
 
 /**
  * - @Description:  新闻类数据适配器
@@ -49,13 +55,26 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        News news = mNewsList.get(position);
-        if(null == news.getBitmap()){
-            holder.newsImg.setImageResource(R.drawable.ic_launcher_background);
-        }
-        else{
-            holder.newsImg.setImageBitmap(news.getBitmap());
-        }
+        final News news = mNewsList.get(position);
+
+        holder.newsImg.setImageResource(R.drawable.ic_launcher_background);
+        holder.newsImg.setTag(news.getImg());
+
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == MSG_IMAGE) {
+                    Bitmap bm = (Bitmap) msg.obj;
+                    if (bm != null) {
+                        if (TextUtils.equals((String) holder.newsImg.getTag(), news.getImg())) {
+                            holder.newsImg.setImageBitmap(bm);
+                        }
+                    }
+                }
+            }
+        };
+
         holder.newsTitle.setText("标题：" + news.getTitle());
         holder.newsSrc.setText("来源：" + news.getSrc());
         holder.newsPtime.setText("日期：" + news.getPtime());
