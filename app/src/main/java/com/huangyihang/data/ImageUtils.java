@@ -26,7 +26,7 @@ import static com.huangyihang.activity.MainActivity.MSG_IMAGE;
  */
 public class ImageUtils {
     private static Bitmap bitmap = null;
-    private Handler handler;
+    private Handler handler = new Handler();
 
     private ImageUtils() {}
     private static final ImageUtils imageUtils = new ImageUtils();

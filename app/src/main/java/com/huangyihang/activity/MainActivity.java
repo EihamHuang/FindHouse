@@ -32,6 +32,7 @@ import com.huangyihang.data.SpacesItemDecoration;
 import com.huangyihang.network.NetworkClient;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +56,34 @@ public class MainActivity extends AppCompatActivity {
     private ImageUtils imageUtils;
     private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
     private boolean hasResult = false;
-    private static Handler handler = new Handler();
+
+    private static class ImgHandler extends Handler {
+        private final WeakReference<MainActivity> mActivity;
+
+        public ImgHandler(MainActivity activity) {
+            mActivity = new WeakReference<MainActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity activity = mActivity.get();
+            if (activity != null) {
+                super.handleMessage(msg);
+                switch (msg.what){
+                    case MSG_IMAGE:
+                        Bitmap bm = (Bitmap) msg.obj;
+                        if (bm != null) {
+//                            if (TextUtils.equals((String) holder.newsImg.getTag(), news.getImg())) {
+//                                holder.newsImg.setImageBitmap(bm);
+//                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    private final ImgHandler imgHandler = new ImgHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

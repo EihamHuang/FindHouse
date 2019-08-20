@@ -16,7 +16,6 @@ import com.huangyihang.activity.R;
 import java.util.List;
 import android.os.Handler;
 
-import static com.huangyihang.activity.MainActivity.MSG_IMAGE;
 
 /**
  * - @Description:  新闻类数据适配器
@@ -26,7 +25,6 @@ import static com.huangyihang.activity.MainActivity.MSG_IMAGE;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private List<News> mNewsList;
     private OnItemClickListener mOnItemClickListener;
-    private Handler handler;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView newsImg;
@@ -60,21 +58,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         holder.newsImg.setImageResource(R.drawable.ic_launcher_background);
         holder.newsImg.setTag(news.getImg());
-
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == MSG_IMAGE) {
-                    Bitmap bm = (Bitmap) msg.obj;
-                    if (bm != null) {
-                        if (TextUtils.equals((String) holder.newsImg.getTag(), news.getImg())) {
-                            holder.newsImg.setImageBitmap(bm);
-                        }
-                    }
-                }
-            }
-        };
 
         holder.newsTitle.setText(news.getTitle());
         holder.newsSrc.setText("来源：" + news.getSrc());
