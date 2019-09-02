@@ -12,23 +12,22 @@ import java.io.Serializable;
  * - @Time:  2019-08-14 15:05
  */
 public class News implements Serializable {
-    private String id;
+    private String uniquekey;
     private String title;
-    private String content;
-    private String pdate;
-    private String src;
-    private String img;
-    private Bitmap bitmap;
+    private String date;
+    private String category;
+    private String author_name;
     private String url;
-    @SerializedName("pdate_src")
-    private String ptime;
+    @SerializedName("thumbnail_pic_s")
+    private String imgurl;
+    private Bitmap bitmap;
 
-    public String getId() {
-        return id;
+    public String getUniquekey() {
+        return uniquekey;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUniquekey(String uniquekey) {
+        this.uniquekey = uniquekey;
     }
 
     public String getTitle() {
@@ -39,36 +38,28 @@ public class News implements Serializable {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getDate() {
+        return date;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getPdate() {
-        return pdate;
+    public String getCategory() {
+        return category;
     }
 
-    public void setPdate(String pdate) {
-        this.pdate = pdate;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getSrc() {
-        return src;
+    public String getAuthor_name() {
+        return author_name;
     }
 
-    public void setSrc(String src) {
-        this.src = src;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
+    public void setAuthor_name(String author_name) {
+        this.author_name = author_name;
     }
 
     public String getUrl() {
@@ -79,12 +70,12 @@ public class News implements Serializable {
         this.url = url;
     }
 
-    public String getPtime() {
-        return ptime;
+    public String getImgurl() {
+        return imgurl;
     }
 
-    public void setPtime(String ptime) {
-        this.ptime = ptime;
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
     }
 
     public Bitmap getBitmap() {
@@ -94,4 +85,5 @@ public class News implements Serializable {
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
     }
+
 }

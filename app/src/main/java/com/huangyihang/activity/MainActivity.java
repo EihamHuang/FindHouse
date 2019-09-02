@@ -1,10 +1,12 @@
 package com.huangyihang.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -46,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
     // appkey
     private String appkey = "d3180a0872444771942636c146a32aed";
-    // 时政新闻接口
+    // 旧接口
     private String url = "http://api.avatardata.cn/ActNews/Query?key=" + appkey + "&keyword=";
+    // 新接口
+    private String newsUrl = "http://www.xieast.com/api/news/news.php";
 
     protected EditText et_Search;
     protected Button btn_Search;
@@ -56,11 +61,12 @@ public class MainActivity extends AppCompatActivity {
     private ImageUtils imageUtils;
     private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
     private boolean hasResult = false;
+    private Context mContext = MainActivity.this;
 
     private static class ImgHandler extends Handler {
         private final WeakReference<MainActivity> mActivity;
 
-        public ImgHandler(MainActivity activity) {
+        private ImgHandler(MainActivity activity) {
             mActivity = new WeakReference<MainActivity>(activity);
         }
 
@@ -96,52 +102,47 @@ public class MainActivity extends AppCompatActivity {
         btn_Search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                    String search = et_Search.getText().toString();
+//                    url += search;
+                NetworkClient.sendRequest(newsUrl , new okhttp3.Callback() {
 
-                if(isInputValid()){
-                    String search = et_Search.getText().toString();
-                    url += search;
-                    NetworkClient.sendRequest(url , new okhttp3.Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
 
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            e.printStackTrace();
+                        MainActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(mContext, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
 
-                            MainActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(MainActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        int code = response.code();
+                        String responseJsonData = response.body().string();
+                        // 解析json
+                        hasResult = parseJSON(responseJsonData);
+                        Log.d("okhttp", "code: " + code);
+                        Log.d("okhttp", "body: " + responseJsonData);
+                        MainActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(hasResult){
+                                    // 加载RecyclerView
+                                    initRecyclerView(newsList);
                                 }
-                            });
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            int code = response.code();
-                            String responseJsonData = response.body().string();
-                            // 解析json
-                            hasResult = parseJSON(responseJsonData);
-                            Log.d("okhttp", "code: " + code);
-                            Log.d("okhttp", "body: " + responseJsonData);
-                            MainActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(hasResult){
-                                        // 加载图片
-                                        initImg(newsList);
-                                        // 加载RecyclerView
-                                        initRecyclerView(newsList);
-                                    }
-                                    //  该关键词没有结果
-                                    else{
-                                        Toast.makeText(MainActivity.this, "该关键词暂时无内容，请输入其他关键词～", Toast.LENGTH_SHORT).show();
-                                    }
+                                //  该关键词没有结果
+                                else{
+                                    Toast.makeText(mContext, "暂时无内容，请稍候重试～", Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                        }
+                            }
+                        });
+                    }
 
-                    });
+                });
 
-                }
             }
         });
     }
@@ -149,10 +150,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean parseJSON(String jsonData) {
         Gson gson = new Gson();
         JsonData<News> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<News>>(){}.getType());
-        if(null == parseResult.getResult()) {
+        if(null == parseResult.getData()) {
             return false;
         }else{
-            newsList = parseResult.getResult();
+            newsList = parseResult.getData();
             return true;
         }
     }
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         imageUtils = ImageUtils.getIntance();
         for(News news : newsList){
-            imageUtils.getBitmap(news.getImg());
+            imageUtils.getBitmap(news.getImgurl());
         }
     }
 
@@ -171,16 +172,29 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this,DividerItemDecoration.VERTICAL));
-        NewsAdapter adapter = new NewsAdapter(newsList);
+        NewsAdapter adapter = new NewsAdapter(newsList, this);
         stringIntegerHashMap.put(SpacesItemDecoration.TOP_DECORATION,25);//顶部间距
         stringIntegerHashMap.put(SpacesItemDecoration.BOTTOM_DECORATION,25);//底部间距
         recyclerView.addItemDecoration(new SpacesItemDecoration(stringIntegerHashMap));
         recyclerView.setAdapter(adapter);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    Glide.with(mContext).resumeRequests();
+                }
+                else {
+                    Glide.with(mContext).pauseRequests();
+                }
+            }
+        });
+
         adapter.setOnItemClickListener(new NewsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(MainActivity.this, "点击新闻： " + position,
+                Toast.makeText(mContext, "点击新闻： " + position,
                         Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(NEWS_KEY, newsList.get(position));
@@ -199,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
             tip = "搜索内容不能为空";
         }
         if(tip != null){
-            Toast.makeText(getApplicationContext(), tip, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, tip, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

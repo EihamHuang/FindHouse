@@ -12,31 +12,31 @@ import java.util.List;
  */
 public class JsonData<T> {
 
-    private List<T> result;
-    private int error_code;
-    private String reason;
+    private List<T> data;
+    private int code;
+    private String msg;
 
-    public List<T> getResult() {
-        return result;
+    public List<T> getData() {
+        return data;
     }
 
-    public void setResult(List<T> result) {
-        this.result = result;
+    public void setData(List<T> data) {
+        this.data = data;
     }
 
-    public int getError_code() {
-        return error_code;
+    public int getCode() {
+        return code;
     }
 
-    public void setError_code(int error_code) {
-        this.error_code = error_code;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getReason() {
-        return reason;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

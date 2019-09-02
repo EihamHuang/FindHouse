@@ -23,7 +23,7 @@ public class ContentActivity extends AppCompatActivity {
         News news = (News) bundle.getSerializable(NEWS_KEY);
 
         tv_Content = findViewById(R.id.news_content);
-        tv_Content.setText(news.getContent());
+        tv_Content.setText(news.getTitle());
 
     }
 }
