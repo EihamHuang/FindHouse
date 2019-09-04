@@ -13,21 +13,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.huangyihang.data.ImageUtils;
+import com.huangyihang.data.ImageTask;
 import com.huangyihang.data.JsonData;
 import com.huangyihang.data.News;
 import com.huangyihang.data.NewsAdapter;
@@ -58,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     protected Button btn_Search;
 
     private List<News> newsList = new ArrayList<>();
-    private ImageUtils imageUtils;
+    private ImageTask imageTask;
     private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
     private boolean hasResult = false;
     private Context mContext = MainActivity.this;
@@ -158,40 +153,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initImg(List<News> newsList){
-        if(null == newsList)
-            return;
-        imageUtils = ImageUtils.getIntance();
-        for(News news : newsList){
-            imageUtils.getBitmap(news.getImgurl());
-        }
-    }
+//    private void initImg(List<News> newsList){
+//        if(null == newsList)
+//            return;
+//        imageTask = ImageTask.getIntance();
+//        for(News news : newsList){
+//            imageTask.getBitmap(news.getImgurl());
+//        }
+//    }
 
     private void initRecyclerView(final List<News> newsList) {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this,DividerItemDecoration.VERTICAL));
-        NewsAdapter adapter = new NewsAdapter(newsList, this);
+        final NewsAdapter newsAdapter = new NewsAdapter(newsList, this);
         stringIntegerHashMap.put(SpacesItemDecoration.TOP_DECORATION,25);//顶部间距
         stringIntegerHashMap.put(SpacesItemDecoration.BOTTOM_DECORATION,25);//底部间距
         recyclerView.addItemDecoration(new SpacesItemDecoration(stringIntegerHashMap));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(newsAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    Glide.with(mContext).resumeRequests();
+                    newsAdapter.setScrolling(false);
+                    newsAdapter.notifyDataSetChanged();
+//                    Glide.with(mContext).resumeRequests();
                 }
                 else {
-                    Glide.with(mContext).pauseRequests();
+                    newsAdapter.setScrolling(true);
+//                    Glide.with(mContext).pauseRequests();
                 }
             }
         });
 
-        adapter.setOnItemClickListener(new NewsAdapter.OnItemClickListener() {
+        newsAdapter.setOnItemClickListener(new NewsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(mContext, "点击新闻： " + position,
