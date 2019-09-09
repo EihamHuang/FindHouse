@@ -41,13 +41,15 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     public static final String NEWS_KEY = "key_news";
     public static final int MSG_IMAGE = 1;
-
-    // appkey
-    private String appkey = "d3180a0872444771942636c146a32aed";
-    // 旧接口
-    private String url = "http://api.avatardata.cn/ActNews/Query?key=" + appkey + "&keyword=";
+//    // 旧接口
+//    private String appkey = "d3180a0872444771942636c146a32aed";
+//
+//    private String url = "http://api.avatardata.cn/ActNews/Query?key=" + appkey + "&keyword=";
     // 新接口
-    private String newsUrl = "http://www.xieast.com/api/news/news.php";
+    private String appkey = "7abf7cfcbedfb2471b914adc0041f917";
+    private String top = "toutiao";
+    private String url = "http://v.juhe.cn/toutiao/index?type=";
+    // top(头条，默认),shehui(社会),guonei(国内),guoji(国际),yule(娱乐),tiyu(体育)junshi(军事),keji(科技),caijing(财经),shishang(时尚)
 
     protected EditText et_Search;
     protected Button btn_Search;
@@ -99,7 +101,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                    String search = et_Search.getText().toString();
 //                    url += search;
-                NetworkClient.sendRequest(newsUrl , new okhttp3.Callback() {
+                url += top;
+                url += "&key=";
+                url += appkey;
+                NetworkClient.sendRequest(url , new okhttp3.Callback() {
 
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -145,10 +150,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean parseJSON(String jsonData) {
         Gson gson = new Gson();
         JsonData<News> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<News>>(){}.getType());
-        if(null == parseResult.getData()) {
+        if(null == parseResult.getResult()) {
             return false;
         }else{
-            newsList = parseResult.getData();
+            newsList = parseResult.getResult().getData();
             return true;
         }
     }
@@ -178,13 +183,13 @@ public class MainActivity extends AppCompatActivity {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    newsAdapter.setScrolling(false);
-                    newsAdapter.notifyDataSetChanged();
-//                    Glide.with(mContext).resumeRequests();
+//                    newsAdapter.setScrolling(false);
+//                    newsAdapter.notifyDataSetChanged();
+                    Glide.with(mContext).resumeRequests();
                 }
                 else {
-                    newsAdapter.setScrolling(true);
-//                    Glide.with(mContext).pauseRequests();
+//                    newsAdapter.setScrolling(true);
+                    Glide.with(mContext).pauseRequests();
                 }
             }
         });

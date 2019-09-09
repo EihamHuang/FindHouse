@@ -65,7 +65,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("ViewHolder", "onCreateViewHolder: " + viewType);
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.news_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
@@ -77,21 +77,21 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         Log.d("ViewHolder", "onBindViewHolder: " + position);
         final News news = mNewsList.get(position);
         holder.newsImg.setImageResource(R.drawable.ic_launcher_background);
-        holder.newsImg.setTag(news.getImgurl());
-//        holder.newsImg.setTag(R.drawable.ic_launcher_background, position);
-        if(!isScrolling){
-            ImageTask imageTask = new ImageTask(holder.newsImg, mContext);
-            imageTask.execute(news.getImgurl());
-//            Glide.with(mContext).load(news.getImgurl()).error(R.drawable.ic_launcher_foreground)
-//                .into(new SimpleTarget<GlideDrawable>() {
-//                    @Override
-//                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-//                        if(position == (Integer) holder.newsImg.getTag(R.drawable.ic_launcher_background)) {
-//                            holder.newsImg.setImageDrawable(resource);
-//                        }
-//                    }
-//                });
-        }
+//        holder.newsImg.setTag(news.getImgurl());
+        holder.newsImg.setTag(R.drawable.ic_launcher_background, position);
+//        if(!isScrolling){
+//            ImageTask imageTask = new ImageTask(holder.newsImg, mContext);
+//            imageTask.execute(news.getImgurl());
+//        }
+        Glide.with(mContext).load(news.getImgurl()).diskCacheStrategy(DiskCacheStrategy.ALL).
+                error(R.drawable.ic_launcher_foreground).into(new SimpleTarget<GlideDrawable>() {
+                @Override
+                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                    if(position == (Integer) holder.newsImg.getTag(R.drawable.ic_launcher_background)) {
+                        holder.newsImg.setImageDrawable(resource);
+                    }
+                }
+            });
 
         holder.newsTitle.setText(news.getTitle());
         holder.newsSrc.setText("来源：" + news.getCategory());
