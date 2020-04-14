@@ -1,4 +1,4 @@
-package com.huangyihang.data;
+package com.findhouse.data;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.huangyihang.network.NetworkClient;
+import com.findhouse.network.NetworkClient;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,7 +23,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.huangyihang.activity.MainActivity.MSG_IMAGE;
+import static com.findhouse.activity.MainActivity.MSG_IMAGE;
 
 /**
  * - @Description:  图片处理

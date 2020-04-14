@@ -1,4 +1,4 @@
-package com.huangyihang.activity;
+package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.huangyihang.data.News;
+import com.findhouse.data.News;
 
-import static com.huangyihang.activity.MainActivity.NEWS_KEY;
+import static com.findhouse.activity.MainActivity.NEWS_KEY;
 
 public class ContentActivity extends AppCompatActivity {
 

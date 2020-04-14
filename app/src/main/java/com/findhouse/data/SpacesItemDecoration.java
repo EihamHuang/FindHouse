@@ -1,4 +1,4 @@
-package com.huangyihang.data;
+package com.findhouse.data;
 
 import android.graphics.Rect;
 import android.view.View;

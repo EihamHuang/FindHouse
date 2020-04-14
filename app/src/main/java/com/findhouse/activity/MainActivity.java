@@ -1,4 +1,4 @@
-package com.huangyihang.activity;
+package com.findhouse.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,14 +20,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.findhouse.data.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.huangyihang.data.ImageTask;
-import com.huangyihang.data.JsonData;
-import com.huangyihang.data.News;
-import com.huangyihang.data.NewsAdapter;
-import com.huangyihang.data.SpacesItemDecoration;
-import com.huangyihang.network.NetworkClient;
+import com.findhouse.data.ImageTask;
+import com.findhouse.data.JsonDataTo;
+import com.findhouse.data.News;
+import com.findhouse.data.NewsAdapter;
+import com.findhouse.data.SpacesItemDecoration;
+import com.findhouse.network.NetworkClient;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -41,11 +42,8 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
     public static final String NEWS_KEY = "key_news";
     public static final int MSG_IMAGE = 1;
-//    // 旧接口
-//    private String appkey = "d3180a0872444771942636c146a32aed";
-//
-//    private String url = "http://api.avatardata.cn/ActNews/Query?key=" + appkey + "&keyword=";
-    // 新接口
+
+    // 新闻接口
     private String appkey = "7abf7cfcbedfb2471b914adc0041f917";
     private String top = "toutiao";
     private String url = "http://v.juhe.cn/toutiao/index?type=";
@@ -92,64 +90,54 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        url += top;
+        url += "&key=";
+        url += appkey;
+        NetworkClient.getRequest(url , new okhttp3.Callback() {
 
-        et_Search = findViewById(R.id.et_search);
-        btn_Search = findViewById(R.id.btn_search);
-
-        btn_Search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-//                    String search = et_Search.getText().toString();
-//                    url += search;
-                url += top;
-                url += "&key=";
-                url += appkey;
-                NetworkClient.sendRequest(url , new okhttp3.Callback() {
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
 
+                MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-
-                        MainActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(mContext, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    public void run() {
+                        Toast.makeText(mContext, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
                     }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        int code = response.code();
-                        String responseJsonData = response.body().string();
-                        // 解析json
-                        hasResult = parseJSON(responseJsonData);
-                        Log.d("okhttp", "code: " + code);
-                        Log.d("okhttp", "body: " + responseJsonData);
-                        MainActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(hasResult){
-                                    // 加载RecyclerView
-                                    initRecyclerView(newsList);
-                                }
-                                //  该关键词没有结果
-                                else{
-                                    Toast.makeText(mContext, "暂时无内容，请稍候重试～", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-
                 });
-
             }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                int code = response.code();
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseJSON(responseJsonData);
+                Log.d("okhttp", "code: " + code);
+                Log.d("okhttp", "body: " + responseJsonData);
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            // 加载RecyclerView
+                            initRecyclerView(newsList);
+                        }
+                        //  该关键词没有结果
+                        else{
+                            Toast.makeText(mContext, "暂时无内容，请稍候重试～", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
         });
+        User user=(User)getIntent().getSerializableExtra("user");
+        Toast.makeText(mContext, user.getName()+" "+user.getTel(), Toast.LENGTH_SHORT).show();
     }
 
     private boolean parseJSON(String jsonData) {
         Gson gson = new Gson();
-        JsonData<News> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<News>>(){}.getType());
+        JsonDataTo<News> parseResult = gson.fromJson(jsonData, new TypeToken<JsonDataTo<News>>(){}.getType());
         if(null == parseResult.getResult()) {
             return false;
         }else{
@@ -157,15 +145,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
-
-//    private void initImg(List<News> newsList){
-//        if(null == newsList)
-//            return;
-//        imageTask = ImageTask.getIntance();
-//        for(News news : newsList){
-//            imageTask.getBitmap(news.getImgurl());
-//        }
-//    }
 
     private void initRecyclerView(final List<News> newsList) {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);

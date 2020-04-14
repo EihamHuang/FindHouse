@@ -1,4 +1,4 @@
-package com.huangyihang.activity;
+package com.findhouse.activity;
 
 import org.junit.Test;
 

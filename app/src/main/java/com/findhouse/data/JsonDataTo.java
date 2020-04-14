@@ -1,26 +1,21 @@
-package com.huangyihang.data;
-
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
-import java.util.List;
+package com.findhouse.data;
 
 /**
  * - @Description:
  * - @Author:  huangyihang
  * - @Time:  2019-08-15 18:23
  */
-public class JsonData<T> {
+public class JsonDataTo<T> {
 
-    private Result<T> result;
+    private ResultTo<T> result;
     private int error_code;
     private String reason;
 
-    public Result<T> getResult() {
+    public ResultTo<T> getResult() {
         return result;
     }
 
-    public void setResult(Result<T> result) {
+    public void setResult(ResultTo<T> result) {
         this.result = result;
     }
 

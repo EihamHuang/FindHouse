@@ -1,4 +1,4 @@
-package com.huangyihang.data;
+package com.findhouse.data;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -20,7 +20,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.huangyihang.activity.R;
+import com.findhouse.activity.R;
 
 import java.util.List;
 
@@ -93,11 +93,8 @@ public class NewsAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
         Log.d("ViewHolder", "onBindViewHolder: " + position);
-        int type = getItemViewType(position);
-        switch(type) {
-            case TYPE_VERTICAL:
-                final VerticalViewHolder holder = (VerticalViewHolder) viewHolder;
-                final News news = mNewsList.get(position);
+        final VerticalViewHolder holder = (VerticalViewHolder) viewHolder;
+        final News news = mNewsList.get(position);
 
 //        holder.newsImg.setImageResource(R.drawable.ic_launcher_background);
 //        holder.newsImg.setTag(news.getImgurl());
@@ -106,52 +103,29 @@ public class NewsAdapter extends RecyclerView.Adapter {
 //            ImageTask imageTask = new ImageTask(holder.newsImg, mContext);
 //            imageTask.execute(news.getImgurl());
 //        }
-                RequestOptions optionsVertical = new RequestOptions()
-                        .centerCrop()
-                        .placeholder(R.drawable.ic_launcher_background)
-                        .error(R.drawable.ic_launcher_foreground);
+        RequestOptions optionsVertical = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_foreground);
 
-                Glide.with(mContext).load(news.getImgurl()).
-                        apply(optionsVertical).
-                        into(holder.newsImg);
+        Glide.with(mContext).load(news.getImgurl()).
+                apply(optionsVertical).
+                into(holder.newsImg);
 
-                holder.newsTitle.setText(news.getTitle());
-                holder.newsSrc.setText("来源：" + news.getCategory());
-                holder.newsPtime.setText("日期：" + news.getDate());
+        holder.newsTitle.setText(news.getTitle());
+        holder.newsSrc.setText("来源：" + news.getCategory());
+        holder.newsPtime.setText("日期：" + news.getDate());
 
-                if (mOnItemClickListener != null) {
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mOnItemClickListener.onItemClick(holder.itemView, position);
-                        }
-                    });
+        if (mOnItemClickListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnItemClickListener.onItemClick(holder.itemView, position);
                 }
-                break;
-
-            case TYPE_HORIZONAL:
-                final HorizonalViewHolder horizonalHolder = (HorizonalViewHolder) viewHolder;
-                final News horizonalNews = mNewsList.get(position);
-
-                Glide.with(mContext).load(horizonalNews.getImgurl()).
-                        apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_background)).
-                        apply(RequestOptions.bitmapTransform(new CircleCrop())).
-                        into(horizonalHolder.newsImg);
-
-                horizonalHolder.newsTitle.setText(horizonalNews.getTitle());
-                horizonalHolder.newsSrc.setText("来源：" + horizonalNews.getCategory());
-                horizonalHolder.newsPtime.setText("日期：" + horizonalNews.getDate());
-
-                if (mOnItemClickListener != null) {
-                    horizonalHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mOnItemClickListener.onItemClick(horizonalHolder.itemView, position);
-                        }
-                    });
-                }
-                break;
+            });
         }
+
+
     }
 
     @Override
@@ -159,14 +133,14 @@ public class NewsAdapter extends RecyclerView.Adapter {
         return mNewsList.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if(position %2 == 0){
-            return TYPE_VERTICAL;
-        } else {
-            return TYPE_HORIZONAL;
-        }
-    }
+//    @Override
+//    public int getItemViewType(int position) {
+//        if(position %2 == 0){
+//            return TYPE_VERTICAL;
+//        } else {
+//            return TYPE_HORIZONAL;
+//        }
+//    }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;

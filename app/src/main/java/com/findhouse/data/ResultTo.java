@@ -1,4 +1,4 @@
-package com.huangyihang.data;
+package com.findhouse.data;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import java.util.List;
  * - @Author:  huangyihang
  * - @Time:  2019/9/7 23:36
  */
-public class Result<T> {
+public class ResultTo<T> {
     private String stat;
     private List<T> data;
 
