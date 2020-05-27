@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background">
@@ -28,18 +27,16 @@
         android:id="@+id/btntextchange2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="6dp"
-        android:layout_marginEnd="50dp"
         android:layout_marginBottom="8dp"
         android:text="我买下的"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintHorizontal_bias="0.737"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnaccept"
-        app:layout_constraintVertical_bias="0.02" />
+        app:layout_constraintVertical_bias="0.024" />
 
     <TextView
         android:id="@+id/btntextchange3"
@@ -53,10 +50,10 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btntextchange2"
-        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintHorizontal_bias="0.398"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnorder"
-        app:layout_constraintVertical_bias="0.02" />
+        app:layout_constraintVertical_bias="0.022" />
 
     <ImageView
         android:id="@+id/headImageView"
@@ -151,7 +148,7 @@
         app:layout_constraintVertical_bias="0.277" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/buttonLogout"
         android:layout_width="257dp"
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
@@ -207,7 +204,7 @@
         android:id="@+id/btntextassistant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+
         android:layout_marginTop="8dp"
         android:text="其他服务"
         android:textSize="18sp"

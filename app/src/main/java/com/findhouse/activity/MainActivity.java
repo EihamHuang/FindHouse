@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.findhouse.fragment.HomeFragment;
 import com.findhouse.fragment.MeFragment;
@@ -21,9 +23,26 @@ public class MainActivity extends AppCompatActivity {
     private Fragment f3;
     private BottomNavigationView navigation;
 
+    private String name;
+    private String pass;
+    private SharedPreferences share;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        share = getSharedPreferences("Login",
+                Context.MODE_PRIVATE);
+        name = share.getString("Name", "");
+        pass = share.getString("Password", "");
+
+        // 未登录的先登录
+        if(name.isEmpty() || pass.isEmpty()) {
+            Intent intent_login = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent_login);
+            MainActivity.this.finish();
+        }
+
         setContentView(R.layout.activity_main);
 
         navigation = findViewById(R.id.bottom_navigation);

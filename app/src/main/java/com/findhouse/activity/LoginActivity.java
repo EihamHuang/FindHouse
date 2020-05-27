@@ -19,6 +19,8 @@ import com.findhouse.utils.Url;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +43,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private String name;
     private String pass;
-
-    // 用于记录帐号和密码
     private SharedPreferences share;
 
     @Override
@@ -50,21 +50,10 @@ public class LoginActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        et_login_name = (EditText) findViewById(R.id.editText1);
-        et_login_password = (EditText) findViewById(R.id.editText2);
-        btnRegister = (Button) findViewById(R.id.buttonRegister);
-        btnLogin = (Button) findViewById(R.id.buttonLogin);
-
-        share = getSharedPreferences("Login",
-                Context.MODE_PRIVATE);
-        name = share.getString("Name", "");
-        pass = share.getString("Password", "");
-
-        if(!name.isEmpty() && !pass.isEmpty()) {
-            et_login_name.setText(name);
-            et_login_password.setText(pass);
-            doLogin();
-        }
+        et_login_name = findViewById(R.id.editText1);
+        et_login_password = findViewById(R.id.editText2);
+        btnRegister = findViewById(R.id.buttonRegister);
+        btnLogin = findViewById(R.id.buttonLogin);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         NetworkClient.postRequest(url, requestBody, new okhttp3.Callback() {
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call,@NotNull IOException e) {
                 e.printStackTrace();
 
                 LoginActivity.this.runOnUiThread(new Runnable() {
@@ -125,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call,@NotNull Response response) throws IOException {
                 int code = response.code();
                 String responseJsonData = response.body().string();
                 // 解析json
@@ -138,8 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                         if(hasResult){
 
                             // 创建SharedPreferences对象用于储存帐号和密码
-                            share = getSharedPreferences("Login",
-                                    Context.MODE_PRIVATE);
+                            share = getSharedPreferences("Login", Context.MODE_PRIVATE);
                             // 存储数据
                             share.edit()
                                     .putString("Name", name)
@@ -148,7 +136,6 @@ public class LoginActivity extends AppCompatActivity {
 
                             Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                             Intent intent_main = new Intent(LoginActivity.this, MainActivity.class);
-                            intent_main.putExtra("user",user.get(0));
                             startActivity(intent_main);
                             LoginActivity.this.finish();
                         }
