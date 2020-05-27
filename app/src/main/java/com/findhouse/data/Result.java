@@ -7,7 +7,7 @@ import java.util.List;
  * - @Author:  huangyihang
  * - @Time:  2019/9/7 23:36
  */
-public class ResultTo<T> {
+public class Result<T> {
     private String stat;
     private List<T> data;
 

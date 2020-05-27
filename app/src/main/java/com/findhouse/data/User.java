@@ -48,4 +48,5 @@ public class User implements Serializable {
     public void setHead(String head) {
         this.head = head;
     }
+
 }

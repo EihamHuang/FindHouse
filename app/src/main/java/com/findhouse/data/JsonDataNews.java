@@ -5,17 +5,17 @@ package com.findhouse.data;
  * - @Author:  huangyihang
  * - @Time:  2019-08-15 18:23
  */
-public class JsonDataTo<T> {
+public class JsonDataNews<T> {
 
-    private ResultTo<T> result;
+    private Result<T> result;
     private int error_code;
     private String reason;
 
-    public ResultTo<T> getResult() {
+    public Result<T> getResult() {
         return result;
     }
 
-    public void setResult(ResultTo<T> result) {
+    public void setResult(Result<T> result) {
         this.result = result;
     }
 

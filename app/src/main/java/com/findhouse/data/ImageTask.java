@@ -3,27 +3,15 @@ package com.findhouse.data;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.findhouse.network.NetworkClient;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
-import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static com.findhouse.activity.MainActivity.MSG_IMAGE;
 
 /**
  * - @Description:  图片处理

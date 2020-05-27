@@ -121,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     public void run() {
                                         if(hasResult){
                                             Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-                                            Intent intent_main = new Intent(RegisterActivity.this,MainActivity.class);
+                                            Intent intent_main = new Intent(RegisterActivity.this, NewsActivity.class);
                                             startActivity(intent_main);
                                             RegisterActivity.this.finish();
                                         }

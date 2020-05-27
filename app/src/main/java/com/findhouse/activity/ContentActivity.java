@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.findhouse.data.News;
 
-import static com.findhouse.activity.MainActivity.NEWS_KEY;
+import static com.findhouse.activity.NewsActivity.NEWS_KEY;
 
 public class ContentActivity extends AppCompatActivity {
 
