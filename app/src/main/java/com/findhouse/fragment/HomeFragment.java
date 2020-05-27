@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
-import com.findhouse.activity.ContentActivity;
+import com.findhouse.activity.HouseActivity;
 import com.findhouse.activity.R;
 import com.findhouse.data.HouseAdapter;
 import com.findhouse.data.HouseInfo;
@@ -140,6 +140,15 @@ public class HomeFragment extends BaseFragment {
                     Glide.with(getContext()).pauseRequests();
                 }
             }
+        });
+
+        houseAdapter.setOnItemClickListener(new HouseAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getContext(), HouseActivity.class);
+                startActivity(intent);
+            }
+
         });
 
     }

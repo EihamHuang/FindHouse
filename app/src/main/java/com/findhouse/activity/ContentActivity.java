@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.findhouse.data.News;
 
-import static com.findhouse.activity.NewsActivity.NEWS_KEY;
 
 public class ContentActivity extends AppCompatActivity {
 
@@ -20,7 +19,7 @@ public class ContentActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        News news = (News) bundle.getSerializable(NEWS_KEY);
+        News news = (News) bundle.getSerializable("key_news");
 
         tv_Content = findViewById(R.id.news_content);
         tv_Content.setText(news.getTitle());
