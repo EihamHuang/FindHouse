@@ -26,6 +26,11 @@ public class HouseAdapter extends RecyclerView.Adapter {
     private HouseAdapter.OnItemClickListener mOnItemClickListener;
     protected boolean isScrolling = false;
 
+    private String[] priceType = {"万", "元/月"};
+    private String[] sellType = {"二手", "租房", "新房"};
+    private int choosePrice = 0;
+    private int chooseSell = 0;
+
     public HouseAdapter(List<HouseInfo> houseList, Context context) {
         mHouseList = houseList;
         mContext = context;
@@ -35,7 +40,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
         ImageView houseImg;
         TextView houseTitle;
         TextView houseArea;
-        TextView housePosition;
+        TextView houseType;
         TextView houseTotalPrice;
 
         public VerticalViewHolder(View view) {
@@ -43,7 +48,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
             houseImg = view.findViewById(R.id.house_img);
             houseTitle = view.findViewById(R.id.house_title);
             houseArea = view.findViewById(R.id.house_area);
-            housePosition = view.findViewById(R.id.house_position);
+            houseType = view.findViewById(R.id.house_type);
             houseTotalPrice = view.findViewById(R.id.house_totalPrice);
         }
     }
@@ -85,10 +90,20 @@ public class HouseAdapter extends RecyclerView.Adapter {
                 apply(optionsVertical).
                 into(holder.houseImg);
 
+        String type = houseInfo.getType();
+        switch (type) {
+            case "zufang" :
+                choosePrice = 1;
+                chooseSell = 1;
+                break;
+            case "xinfang" :
+                chooseSell = 2;
+        }
+
         holder.houseTitle.setText(houseInfo.getTitle());
-        holder.houseArea.setText(houseInfo.getAreaInfo());
-        holder.housePosition.setText(houseInfo.getPositionInfo());
-        holder.houseTotalPrice.setText(houseInfo.getTotalPrice()+"万");
+        holder.houseArea.setText(houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
+        holder.houseType.setText(sellType[chooseSell]);
+        holder.houseTotalPrice.setText(houseInfo.getTotalPrice()+priceType[choosePrice]);
 
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {

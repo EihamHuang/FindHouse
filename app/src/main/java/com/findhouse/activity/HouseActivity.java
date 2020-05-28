@@ -43,6 +43,8 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
     private String type = "/house";
     private String route = "/detail";
+    private String[] priceType = {"万", "元/月"};
+    private int choose = 0;
 
     private Banner banner;
     private TextView houseTitle;
@@ -137,11 +139,15 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         houseInstall = findViewById(R.id.houseInstall);
         houseDes = findViewById(R.id.houseDes);
 
+        if(houseInfo.getType().equals("zufang")) {
+            choose = 1;
+        }
+
         houseTitle.setText(houseInfo.getTitle());
         housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
 
-        houseTotalPrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getTotalPrice()+"万</font>"));
-        houseArea.setText(Html.fromHtml("面积：<font color='#000000'>"+houseDetailList.get(0).getHouseArea()+"平方米</font>"));
+        houseTotalPrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getTotalPrice()+" "+priceType[choose]+"</font>"));
+        houseArea.setText(Html.fromHtml("面积：<font color='#000000'>"+houseDetailList.get(0).getHouseArea()+" 平方米</font>"));
 
         houseApartment.setText(Html.fromHtml("房型：<font color='#000000'>"+houseDetailList.get(0).getHouseApartment()+"</font>"));
         houseFix.setText(Html.fromHtml("装修：<font color='#000000'>"+houseDetailList.get(0).getHouseFix()+"</font>"));
