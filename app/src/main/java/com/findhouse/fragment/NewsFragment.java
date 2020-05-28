@@ -120,7 +120,7 @@ public class NewsFragment extends BaseFragment {
     }
 
     private void initRecyclerView(final List<News> newsList,final View view) {
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));

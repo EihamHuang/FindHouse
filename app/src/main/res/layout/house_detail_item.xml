@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/houseTitle"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:textSize="23dp" />
+
+    <TextView
+        android:id="@+id/housePosition"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/houseTitle"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp" />
+
+    <View
+        android:id="@+id/split"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/housePosition"
+        android:layout_marginTop="10dp"
+        android:background="#ff111111"/>
+
+    <TextView
+        android:id="@+id/houseTotalPrice"
+        android:layout_below="@id/split"
+        android:layout_marginTop="@string/detail_dis"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/houseArea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/split"
+        android:layout_marginTop="@string/detail_dis"
+        android:layout_marginLeft="230dp" />
+
+    <TextView
+        android:id="@+id/houseApartment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/houseTotalPrice"
+        android:layout_marginTop="@string/detail_dis"
+        android:layout_marginLeft="10dp" />
+
+    <TextView
+        android:id="@+id/houseFix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/houseArea"
+        android:layout_marginTop="@string/detail_dis"
+        android:layout_marginLeft="230dp" />
+
+    <TextView
+        android:id="@+id/houseOrientation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/houseApartment"
+        android:layout_marginTop="@string/detail_dis"
+        android:layout_marginLeft="10dp" />
+
+    <TextView
+        android:id="@+id/houseFloor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/houseFix"
+        android:layout_marginTop="@string/detail_dis"
+        android:layout_marginLeft="230dp" />
+
+    <TextView
+        android:id="@+id/houseDes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/houseOrientation"
+        android:layout_marginTop="@string/detail_dis"
+        android:layout_marginLeft="10dp" />
+
+    <View
+        android:id="@+id/splitTwo"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/houseDes"
+        android:layout_marginTop="10dp"
+        android:background="#ff111111"/>
+
+    <TextView
+        android:id="@+id/houseInstall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/splitTwo"
+        android:layout_marginTop="@string/detail_dis"
+        android:layout_marginLeft="10dp" />
+
+
+
+</RelativeLayout>

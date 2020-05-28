@@ -116,7 +116,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initRecyclerView(final List<HouseInfo> houseList,final View view) {
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));

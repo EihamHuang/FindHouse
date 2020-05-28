@@ -1,6 +1,8 @@
 package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.findhouse.data.HouseDetail;
+import com.findhouse.data.HouseDetailAdapter;
 import com.findhouse.data.HouseInfo;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
@@ -37,15 +40,14 @@ import static com.findhouse.fragment.HomeFragment.KEY_HOUSE;
 
 public class HouseActivity extends AppCompatActivity implements OnBannerListener {
 
-    private TextView title;
-    private Banner banner;
-
     private String type = "/house";
     private String route = "/detail";
 
+    private Banner banner;
+
     private boolean hasResult = false;
     private HouseInfo houseInfo;
-    private List<HouseDetail> houseDetail;
+    private List<HouseDetail> houseDetailList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,6 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         setContentView(R.layout.activity_house);
 
         banner = findViewById(R.id.banner);
-        title = findViewById(R.id.houseTitle);
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -91,9 +92,10 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                     public void run() {
                         if(hasResult){
                             SpiltUtil spiltUtil = new SpiltUtil();
-                            String[] urls = spiltUtil.spiltSemicolon(houseDetail.get(0).getHouseImg());
+                            String[] urls = spiltUtil.spiltSemicolon(houseDetailList.get(0).getHouseImg());
                             initImg(urls);
-                            title.setText(urls[0]);
+
+                            initDetail();
                         }
                         //  失败
                         else{
@@ -107,12 +109,17 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
     }
 
+    private void initDetail() {
+        RecyclerView recyclerView = findViewById(R.id.houseDetail);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        HouseDetailAdapter houseDetailAdapter = new HouseDetailAdapter(houseDetailList, this);
+        recyclerView.setAdapter(houseDetailAdapter);
+    }
+
     private void initImg(String[] urls) {
-        //图片资源
-//        int[] imageResourceID = new int[]{R.drawable.ic_launcher_background, R.drawable.ic_launcher_background, R.drawable.ic_launcher_background};
         List<String> imageList = new ArrayList<>();
-        //轮播标题
-        String[] mtitle = new String[]{"", "", ""};
+        String[] mTitle = new String[]{"", "", ""};
         List<String> titleList = new ArrayList<>();
 
         final RequestOptions optionsVertical = new RequestOptions()
@@ -122,7 +129,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
         for (int i=0; i<urls.length; i++) {
             imageList.add(urls[i]);//把图片资源循环放入list里面
-            titleList.add(mtitle[i]);//把标题循环设置进列表里面
+            titleList.add(mTitle[i]);//把标题循环设置进列表里面
             //设置图片加载器，通过Glide加载图片
             banner.setImageLoader(new ImageLoader() {
                 @Override
@@ -151,7 +158,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         if(null == parseResult.getData()) {
             return false;
         }else{
-            houseDetail = parseResult.getData();
+            houseDetailList = parseResult.getData();
             return true;
         }
     }
@@ -171,7 +178,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     //轮播图点击事件
     @Override
     public void OnBannerClick(int position) {
-        Toast.makeText(this, "你点击了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
+
     }
 
 }
