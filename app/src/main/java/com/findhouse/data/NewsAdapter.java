@@ -105,8 +105,8 @@ public class NewsAdapter extends RecyclerView.Adapter {
 //        }
         RequestOptions optionsVertical = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_foreground);
+                .placeholder(R.drawable.wait)
+                .error(R.drawable.wait);
 
         Glide.with(mContext).load(news.getImgurl()).
                 apply(optionsVertical).

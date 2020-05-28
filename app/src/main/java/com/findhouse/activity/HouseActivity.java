@@ -123,11 +123,6 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     }
 
     private void initDetail() {
-//        RecyclerView recyclerView = findViewById(R.id.houseDetail);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        recyclerView.setLayoutManager(layoutManager);
-//        HouseDetailAdapter houseDetailAdapter = new HouseDetailAdapter(houseDetailList, this);
-//        recyclerView.setAdapter(houseDetailAdapter);
         houseTitle = findViewById(R.id.houseTitle);
         houseArea = findViewById(R.id.houseArea);
         housePosition = findViewById(R.id.housePosition);
@@ -166,8 +161,8 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
         final RequestOptions optionsVertical = new RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_foreground);
+                .placeholder(R.drawable.wait)
+                .error(R.drawable.wait);
 
         for (int i=0; i<urls.length; i++) {
             imageList.add(urls[i]);//把图片资源循环放入list里面
