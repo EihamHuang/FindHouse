@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +45,7 @@ import okhttp3.Response;
 
 import static com.findhouse.fragment.HomeFragment.KEY_HOUSE;
 
-public class HouseActivity extends AppCompatActivity implements OnBannerListener {
+public class HouseActivity extends AppCompatActivity implements OnBannerListener, View.OnClickListener {
 
     private String type = "/house";
     private String route = "/detail";
@@ -72,6 +74,8 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_house);
 
+        findViewById(R.id.btnPhone).setOnClickListener(this);
+        findViewById(R.id.btnOrder).setOnClickListener(this);
         banner = findViewById(R.id.banner);
 
         Intent intent = this.getIntent();
@@ -250,6 +254,22 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
             houseDetailList = parseResult.getData();
             return true;
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnPhone :
+                Intent dialIntent =  new Intent(Intent.ACTION_DIAL);//跳转到拨号界面，同时传递电话号码
+                Uri data = Uri.parse("tel:" + "18888888888");
+                dialIntent.setData(data);
+                startActivity(dialIntent);
+                break;
+            case R.id.btnOrder :
+
+                break;
+        }
+
     }
 
     @Override

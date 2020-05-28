@@ -114,8 +114,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 String responseJsonData = response.body().string();
                                 // 解析json
                                 hasResult = parseJSON(responseJsonData);
-                                Log.d("okhttp", "code: " + code);
-                                Log.d("okhttp", "body: " + responseJsonData);
                                 RegisterActivity.this.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
