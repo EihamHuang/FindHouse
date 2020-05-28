@@ -35,6 +35,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
         ImageView houseImg;
         TextView houseTitle;
         TextView houseArea;
+        TextView housePosition;
         TextView houseTotalPrice;
 
         public VerticalViewHolder(View view) {
@@ -42,6 +43,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
             houseImg = view.findViewById(R.id.house_img);
             houseTitle = view.findViewById(R.id.house_title);
             houseArea = view.findViewById(R.id.house_area);
+            housePosition = view.findViewById(R.id.house_position);
             houseTotalPrice = view.findViewById(R.id.house_totalPrice);
         }
     }
@@ -85,6 +87,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
 
         holder.houseTitle.setText(houseInfo.getTitle());
         holder.houseArea.setText(houseInfo.getAreaInfo());
+        holder.housePosition.setText(houseInfo.getPositionInfo());
         holder.houseTotalPrice.setText(houseInfo.getTotalPrice()+"万");
 
         if (mOnItemClickListener != null) {

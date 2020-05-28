@@ -38,7 +38,7 @@ import okhttp3.Response;
 
 
 public class HomeFragment extends BaseFragment {
-    public static final String HOUSE_KEY = "key_house";
+    public static final String KEY_HOUSE = "key_house";
     public static final int MSG_IMAGE = 1;
 
     private List<HouseInfo> houseList = new ArrayList<>();
@@ -131,12 +131,12 @@ public class HomeFragment extends BaseFragment {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    newsAdapter.setScrolling(false);
-//                    newsAdapter.notifyDataSetChanged();
+//                    houseAdapter.setScrolling(false);
+//                    houseAdapter.notifyDataSetChanged();
                     Glide.with(getContext()).resumeRequests();
                 }
                 else {
-//                    newsAdapter.setScrolling(true);
+//                    houseAdapter.setScrolling(true);
                     Glide.with(getContext()).pauseRequests();
                 }
             }
@@ -145,7 +145,10 @@ public class HomeFragment extends BaseFragment {
         houseAdapter.setOnItemClickListener(new HouseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(KEY_HOUSE, houseList.get(position));
                 Intent intent = new Intent(getContext(), HouseActivity.class);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
 

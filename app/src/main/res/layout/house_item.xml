@@ -26,6 +26,13 @@
         android:layout_marginLeft="130dp" />
 
     <TextView
+        android:id="@+id/house_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="180dp" />
+
+    <TextView
         android:id="@+id/house_totalPrice"
         android:layout_marginTop="100dp"
         android:layout_marginLeft="280dp"

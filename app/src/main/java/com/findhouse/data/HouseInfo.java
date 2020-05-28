@@ -11,6 +11,7 @@ public class HouseInfo implements Serializable {
     private int totalPrice;
     private String positionInfo;
     private String areaInfo;
+    private String regionInfo;
     private String img;
     private String detail;
 
@@ -76,6 +77,14 @@ public class HouseInfo implements Serializable {
 
     public void setAreaInfo(String areaInfo) {
         this.areaInfo = areaInfo;
+    }
+
+    public String getRegionInfo() {
+        return regionInfo;
+    }
+
+    public void setRegionInfo(String regionInfo) {
+        this.regionInfo = regionInfo;
     }
 
     public String getImg() {
