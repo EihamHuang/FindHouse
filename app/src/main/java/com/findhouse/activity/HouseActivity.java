@@ -1,11 +1,12 @@
 package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -15,9 +16,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.findhouse.data.HouseDetail;
 
 import com.findhouse.data.HouseInfo;
+import com.findhouse.data.InstallEntity;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.SpiltUtil;
@@ -46,6 +50,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private String[] priceType = {"万", "元/月"};
     private int choose = 0;
 
+    private RecyclerView recyclerView;
     private Banner banner;
     private TextView houseTitle;
     private TextView housePosition;
@@ -56,11 +61,11 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private TextView houseOrientation;
     private TextView houseFloor;
     private TextView houseDes;
-    private TextView houseInstall;
 
     private boolean hasResult = false;
     private HouseInfo houseInfo;
     private List<HouseDetail> houseDetailList;
+    private List<InstallEntity> installEntityList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,12 +136,13 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         houseFix = findViewById(R.id.houseFix);
         houseOrientation = findViewById(R.id.houseOrientation);
         houseFloor = findViewById(R.id.houseFloor);
-        houseInstall = findViewById(R.id.houseInstall);
         houseDes = findViewById(R.id.houseDes);
 
         if(houseInfo.getType().equals("zufang")) {
             choose = 1;
         }
+
+        initInstall();
 
         houseTitle.setText(houseInfo.getTitle());
         housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
@@ -151,6 +157,52 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         houseFloor.setText(Html.fromHtml("楼层：<font color='#000000'>"+houseDetailList.get(0).getHouseFloor()+"</font>"));
 
         houseDes.setText(Html.fromHtml("描述：<font color='#000000'>"+houseDetailList.get(0).getHouseDes()+"</font>"));
+
+    }
+
+    private void initInstall() {
+        SpiltUtil spiltUtil = new SpiltUtil();
+        int[] installId = new int[10];
+        installId = spiltUtil.spiltInstall(houseDetailList.get(0).getHouseInstall());
+        for (int i = 0; i < 10; i++) {
+            InstallEntity installEntity = new InstallEntity();
+            installEntity.setId(installId[i]);
+            installEntity.setInstall(spiltUtil.installType[i]);
+            installEntityList.add(installEntity);
+        }
+
+        recyclerView = findViewById(R.id.houseInstall);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,5) {
+            @Override
+            // 禁止滑动
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        recyclerView.setLayoutManager(layoutManager);
+        //直接new匿名类，不需要单独创建Adapter类文件。
+        recyclerView.setAdapter(new BaseQuickAdapter<InstallEntity, BaseViewHolder>(R.layout.install_item, installEntityList) {
+            @Override
+            protected void convert(BaseViewHolder helper, InstallEntity item) {
+                // 用反射获取图片资源ID
+                try {
+                    int imgID = R.drawable.class.getField( "install"+String.valueOf(helper.getLayoutPosition())).getInt(new R.drawable());
+                    helper.setText(R.id.tv_houseInstall, item.getInstall());
+                    helper.setImageResource(R.id.image_houseInstall, imgID);
+
+                    // 没有该设施则变灰
+                    if(item.getId()==0) {
+                        helper.setTextColor(R.id.tv_houseInstall, Color.parseColor("#ffcccccc"));
+                        ImageView imageView = helper.getView(R.id.image_houseInstall);
+                        imageView.setColorFilter(Color.parseColor("#ffcccccc"));
+                    }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
     }
 

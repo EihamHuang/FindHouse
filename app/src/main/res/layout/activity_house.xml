@@ -15,23 +15,23 @@
 
     <TextView
         android:id="@+id/houseTitle"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/banner"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:textColor="#000000"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/housePosition"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/houseTitle"
         android:layout_marginTop="10dp"
         android:textColor="#000000"
         android:layout_marginLeft="10dp"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <View
         android:id="@+id/split"
@@ -44,7 +44,7 @@
     <TextView
         android:id="@+id/houseTotalPrice"
         android:layout_below="@id/split"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/split"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="230dp" />
 
     <TextView
@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/houseTotalPrice"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp" />
 
     <TextView
@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/houseArea"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="230dp" />
 
     <TextView
@@ -78,7 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/houseApartment"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp" />
 
     <TextView
@@ -86,7 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/houseFix"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="230dp" />
 
     <View
@@ -94,23 +94,21 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/houseFloor"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:background="#ffcccccc"/>
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/houseInstall"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/splitTwo"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_below="@id/splitTwo" />
 
     <View
         android:id="@+id/splitThree"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/houseInstall"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:background="#ffcccccc"/>
 
     <TextView
@@ -119,8 +117,37 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/splitThree"
         android:lineSpacingMultiplier="1.2"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp" />
 
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btnPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="电话"
+            android:textSize="25sp"
+            android:textColor="@android:color/background_light"
+            android:background="@color/colorPrimary"
+            android:layout_weight="1"
+            android:layout_marginRight="0.5dp" />
+
+        <Button
+            android:id="@+id/btnOrder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="下单"
+            android:textSize="25sp"
+            android:textColor="@android:color/background_light"
+            android:background="@color/colorPrimary"
+            android:layout_weight="1"
+            android:layout_marginLeft="0.5dp" />
+
+    </LinearLayout >
 
 </RelativeLayout>

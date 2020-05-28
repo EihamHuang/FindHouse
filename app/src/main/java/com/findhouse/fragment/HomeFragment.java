@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.findhouse.activity.HouseActivity;
+import com.findhouse.activity.NewHouseActivity;
 import com.findhouse.activity.R;
 import com.findhouse.data.HouseAdapter;
 import com.findhouse.data.HouseInfo;
@@ -39,10 +40,8 @@ import okhttp3.Response;
 
 public class HomeFragment extends BaseFragment {
     public static final String KEY_HOUSE = "key_house";
-    public static final int MSG_IMAGE = 1;
 
     private List<HouseInfo> houseList = new ArrayList<>();
-    private ImageTask imageTask;
     private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
     private boolean hasResult = false;
 
@@ -55,13 +54,10 @@ public class HomeFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        String city = "sh";
-        String typeTwo = "ershou";
-
         Url baseUrl = new Url();
         baseUrl.setType(type);
         baseUrl.setRoute(route);
-        String url = baseUrl.toString()+"?city="+city+"&type="+typeTwo;
+        String url = baseUrl.toString();
 
         NetworkClient.getRequest(url, new okhttp3.Callback() {
 
@@ -145,11 +141,19 @@ public class HomeFragment extends BaseFragment {
         houseAdapter.setOnItemClickListener(new HouseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                HouseInfo houseInfo = houseList.get(position);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(KEY_HOUSE, houseList.get(position));
-                Intent intent = new Intent(getContext(), HouseActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                bundle.putSerializable(KEY_HOUSE, houseInfo);
+                if(houseInfo.getType().equals("xinfang")) {
+                    Intent intent = new Intent(getContext(), NewHouseActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(getContext(), HouseActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
 
         });

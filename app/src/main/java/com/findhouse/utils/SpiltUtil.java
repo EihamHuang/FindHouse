@@ -1,6 +1,8 @@
 package com.findhouse.utils;
 
 public class SpiltUtil {
+    public String[] installType = {"洗衣机", "空调", "衣柜","电视", "冰箱", "热水器","床", "暖气", "宽带", "天然气"};
+
     public String[] spiltSemicolon(String url) {
         String[] splitUrl = url.split("\\;");
         return splitUrl;
