@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.findhouse.data.HouseDetail;
-import com.findhouse.data.HouseDetailAdapter;
+
 import com.findhouse.data.HouseInfo;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
@@ -44,6 +45,16 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private String route = "/detail";
 
     private Banner banner;
+    private TextView houseTitle;
+    private TextView housePosition;
+    private TextView houseTotalPrice;
+    private TextView houseArea;
+    private TextView houseApartment;
+    private TextView houseFix;
+    private TextView houseOrientation;
+    private TextView houseFloor;
+    private TextView houseDes;
+    private TextView houseInstall;
 
     private boolean hasResult = false;
     private HouseInfo houseInfo;
@@ -110,11 +121,36 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     }
 
     private void initDetail() {
-        RecyclerView recyclerView = findViewById(R.id.houseDetail);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        HouseDetailAdapter houseDetailAdapter = new HouseDetailAdapter(houseDetailList, this);
-        recyclerView.setAdapter(houseDetailAdapter);
+//        RecyclerView recyclerView = findViewById(R.id.houseDetail);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        recyclerView.setLayoutManager(layoutManager);
+//        HouseDetailAdapter houseDetailAdapter = new HouseDetailAdapter(houseDetailList, this);
+//        recyclerView.setAdapter(houseDetailAdapter);
+        houseTitle = findViewById(R.id.houseTitle);
+        houseArea = findViewById(R.id.houseArea);
+        housePosition = findViewById(R.id.housePosition);
+        houseTotalPrice = findViewById(R.id.houseTotalPrice);
+        houseApartment = findViewById(R.id.houseApartment);
+        houseFix = findViewById(R.id.houseFix);
+        houseOrientation = findViewById(R.id.houseOrientation);
+        houseFloor = findViewById(R.id.houseFloor);
+        houseInstall = findViewById(R.id.houseInstall);
+        houseDes = findViewById(R.id.houseDes);
+
+        houseTitle.setText(houseInfo.getTitle());
+        housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
+
+        houseTotalPrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getTotalPrice()+"万</font>"));
+        houseArea.setText(Html.fromHtml("面积：<font color='#000000'>"+houseDetailList.get(0).getHouseArea()+"平方米</font>"));
+
+        houseApartment.setText(Html.fromHtml("房型：<font color='#000000'>"+houseDetailList.get(0).getHouseApartment()+"</font>"));
+        houseFix.setText(Html.fromHtml("装修：<font color='#000000'>"+houseDetailList.get(0).getHouseFix()+"</font>"));
+
+        houseOrientation.setText(Html.fromHtml("朝向：<font color='#000000'>"+houseDetailList.get(0).getHouseOrientation()+"</font>"));
+        houseFloor.setText(Html.fromHtml("楼层：<font color='#000000'>"+houseDetailList.get(0).getHouseFloor()+"</font>"));
+
+        houseDes.setText(Html.fromHtml("描述：<font color='#000000'>"+houseDetailList.get(0).getHouseDes()+"</font>"));
+
     }
 
     private void initImg(String[] urls) {
