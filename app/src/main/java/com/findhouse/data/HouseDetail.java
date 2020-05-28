@@ -10,7 +10,7 @@ public class HouseDetail implements Serializable {
     private String houseFix;
     private String houseOrientation;
     private String houseInstall;
-    private String housImg;
+    private String houseImg;
     private String houseDes;
 
     public String getHouseId() {
@@ -69,12 +69,12 @@ public class HouseDetail implements Serializable {
         this.houseInstall = houseInstall;
     }
 
-    public String getHousImg() {
-        return housImg;
+    public String getHouseImg() {
+        return houseImg;
     }
 
-    public void setHousImg(String housImg) {
-        this.housImg = housImg;
+    public void setHouseImg(String houseImg) {
+        this.houseImg = houseImg;
     }
 
     public String getHouseDes() {
