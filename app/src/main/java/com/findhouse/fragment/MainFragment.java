@@ -38,6 +38,7 @@ import okhttp3.Response;
 
 public class MainFragment extends BaseFragment {
     public static final String KEY_HOUSE = "key_house";
+    public static final String KEY_HOUSE_DETAIL = "key_house_detail";
 
     private List<HouseInfo> houseList = new ArrayList<>();
     private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();

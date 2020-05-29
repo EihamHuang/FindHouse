@@ -30,6 +30,9 @@ public class TimeUtil {
      */
     public int getTimeDifference(String starTime, String endTime) {
         int time = 0;
+        if(starTime == null || endTime == null) {
+            return time;
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date parse = dateFormat.parse(starTime);
@@ -39,7 +42,6 @@ public class TimeUtil {
             time = (int)day;
 
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return time;

@@ -45,6 +45,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
+import static com.findhouse.fragment.MainFragment.KEY_HOUSE_DETAIL;
 
 public class HouseActivity extends AppCompatActivity implements OnBannerListener, View.OnClickListener {
 
@@ -277,6 +278,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                 break;
             case R.id.btnOrder :
                 Intent orderIntent =  new Intent(HouseActivity.this, OrderActivity.class);
+                bundle.putSerializable(KEY_HOUSE_DETAIL, houseDetailList.get(0));
                 orderIntent.putExtras(bundle);
                 startActivity(orderIntent);
                 break;
