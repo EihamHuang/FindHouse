@@ -36,7 +36,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 
-public class HomeFragment extends BaseFragment {
+public class MainFragment extends BaseFragment {
     public static final String KEY_HOUSE = "key_house";
 
     private List<HouseInfo> houseList = new ArrayList<>();
@@ -50,7 +50,7 @@ public class HomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         Url baseUrl = new Url();
         baseUrl.setType(type);
@@ -73,7 +73,6 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                int code = response.code();
                 String responseJsonData = response.body().string();
                 // 解析json
                 hasResult = parseJSON(responseJsonData);

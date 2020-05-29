@@ -115,7 +115,6 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(@NotNull Call call,@NotNull Response response) throws IOException {
-                int code = response.code();
                 String responseJsonData = response.body().string();
                 // 解析json
                 hasResult = parseJSON(responseJsonData);

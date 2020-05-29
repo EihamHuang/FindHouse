@@ -81,7 +81,6 @@ public class NewsFragment extends BaseFragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                int code = response.code();
                 String responseJsonData = response.body().string();
                 // 解析json
                 hasResult = parseJSON(responseJsonData);

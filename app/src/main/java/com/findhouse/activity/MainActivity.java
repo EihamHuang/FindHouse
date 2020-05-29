@@ -12,7 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.findhouse.fragment.HomeFragment;
+import com.findhouse.fragment.MainFragment;
 import com.findhouse.fragment.MeFragment;
 import com.findhouse.fragment.NewsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         switch (i){
             case 1:
                 if(f1==null){
-                    f1 = new HomeFragment();
+                    f1 = new MainFragment();
                     transaction.add(R.id.fragment_container,f1);
                 }else{
                     transaction.show(f1);

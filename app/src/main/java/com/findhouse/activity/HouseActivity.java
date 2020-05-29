@@ -44,7 +44,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static com.findhouse.fragment.HomeFragment.KEY_HOUSE;
+import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
 
 public class HouseActivity extends AppCompatActivity implements OnBannerListener, View.OnClickListener {
 
@@ -229,9 +229,6 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
     private void initImg(String[] urls) {
         List<String> imageList = new ArrayList<>();
-        String[] mTitle = new String[]{"", "", ""};
-        List<String> titleList = new ArrayList<>();
-
         final RequestOptions optionsVertical = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
@@ -239,7 +236,6 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
         for (int i=0; i<urls.length; i++) {
             imageList.add(urls[i]);//把图片资源循环放入list里面
-            titleList.add(mTitle[i]);//把标题循环设置进列表里面
             //设置图片加载器，通过Glide加载图片
             banner.setImageLoader(new ImageLoader() {
                 @Override
@@ -249,13 +245,12 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                             into(imageView);
                 }
             });
-            //设置轮播的动画效果,里面有很多种特效,可以到GitHub上查看文档。
+            //设置轮播的动画效果
             banner.setBannerAnimation(Transformer.Accordion);
             banner.setImages(imageList);//设置图片资源
-            banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);//设置banner显示样式（带标题的样式）
-            banner.setBannerTitles(titleList); //设置标题集合（当banner样式有显示title时）
-            //设置指示器位置（即图片下面的那个小圆点）
-            banner.setIndicatorGravity(BannerConfig.CENTER);
+            banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);//设置banner显示样式
+            //设置指示器位置（小圆点）
+            banner.setIndicatorGravity(BannerConfig.RIGHT);
             banner.setDelayTime(3*1000);//设置轮播时间3秒切换下一图
             banner.setOnBannerListener(this);//设置监听
             banner.start();//开始进行banner渲染

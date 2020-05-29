@@ -9,6 +9,16 @@ public class SpiltUtil {
         String[] splitUrl = url.split("\\;");
         return splitUrl;
     }
+
+    public int spiltApartment(String s) {
+        int num = 1;
+        for(int i=0; i<s.length(); i++) {
+            if(s.charAt(i)==';')
+                num++;
+        }
+        return num;
+    }
+
     public int[] spiltInstall(String url) {
         int length = url.length();
         int[] result = new int[length];

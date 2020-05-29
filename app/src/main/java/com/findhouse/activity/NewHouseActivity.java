@@ -1,12 +1,10 @@
 package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -19,11 +17,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.findhouse.data.NewHouseDetail;
 import com.findhouse.data.HouseInfo;
-import com.findhouse.data.InstallEntity;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.SpiltUtil;
@@ -43,7 +38,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static com.findhouse.fragment.HomeFragment.KEY_HOUSE;
+import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
 
 public class NewHouseActivity extends AppCompatActivity implements OnBannerListener, View.OnClickListener {
 
@@ -141,7 +136,9 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
         houseType = findViewById(R.id.houseType);
 
         houseDes = findViewById(R.id.houseDes);
-        
+
+        SpiltUtil spiltUtil = new SpiltUtil();
+        int num = spiltUtil.spiltApartment(NewHouseDetailList.get(0).getHouseApartment());
 
         houseTitle.setText(houseInfo.getTitle());
         housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
@@ -149,8 +146,8 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
         housePrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getPrice()+" "+spiltUtil.priceType[choosePrice]+"</font>"));
         houseArea.setText(Html.fromHtml("建面：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseArea()+" 平方米</font>"));
 
-        houseOpen.setText(Html.fromHtml("用途：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseOpen()+"</font>"));
-        houseApartment.setText(Html.fromHtml("房型：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseApartment()+"</font>"));
+        houseOpen.setText(Html.fromHtml("开盘：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseOpen()+"</font>"));
+        houseApartment.setText(Html.fromHtml("户型：<font color='#000000'>"+num+"种</font>"));
 
         houseType.setText(Html.fromHtml("用途：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseType()+"</font>"));
 
@@ -160,13 +157,9 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
         btnPhone.setText("联系 "+NewHouseDetailList.get(0).getUserName());
 
     }
-    
 
     private void initImg(String[] urls) {
         List<String> imageList = new ArrayList<>();
-        String[] mTitle = new String[]{"", "", ""};
-        List<String> titleList = new ArrayList<>();
-
         final RequestOptions optionsVertical = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
@@ -174,7 +167,6 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
 
         for (int i=0; i<urls.length; i++) {
             imageList.add(urls[i]);//把图片资源循环放入list里面
-            titleList.add(mTitle[i]);//把标题循环设置进列表里面
             //设置图片加载器，通过Glide加载图片
             banner.setImageLoader(new ImageLoader() {
                 @Override
@@ -184,13 +176,12 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
                             into(imageView);
                 }
             });
-            //设置轮播的动画效果,里面有很多种特效,可以到GitHub上查看文档。
+            //设置轮播的动画效果
             banner.setBannerAnimation(Transformer.Accordion);
             banner.setImages(imageList);//设置图片资源
-            banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);//设置banner显示样式（带标题的样式）
-            banner.setBannerTitles(titleList); //设置标题集合（当banner样式有显示title时）
-            //设置指示器位置（即图片下面的那个小圆点）
-            banner.setIndicatorGravity(BannerConfig.CENTER);
+            banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);//设置banner显示样式
+            //设置指示器位置（小圆点）
+            banner.setIndicatorGravity(BannerConfig.RIGHT);
             banner.setDelayTime(3*1000);//设置轮播时间3秒切换下一图
             banner.setOnBannerListener(this);//设置监听
             banner.start();//开始进行banner渲染
