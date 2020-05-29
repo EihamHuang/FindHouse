@@ -12,6 +12,8 @@ public class HouseDetail implements Serializable {
     private String houseInstall;
     private String houseImg;
     private String houseDes;
+    private String userName;
+    private String userTel;
 
     public String getHouseId() {
         return houseId;
@@ -83,5 +85,21 @@ public class HouseDetail implements Serializable {
 
     public void setHouseDes(String houseDes) {
         this.houseDes = houseDes;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserTel() {
+        return userTel;
+    }
+
+    public void setUserTel(String userTel) {
+        this.userTel = userTel;
     }
 }

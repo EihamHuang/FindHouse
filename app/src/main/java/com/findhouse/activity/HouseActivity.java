@@ -171,6 +171,8 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
         houseDes.setText(Html.fromHtml("描述：<font color='#000000'>"+houseDetailList.get(0).getHouseDes()+"</font>"));
 
+        btnPhone.setText("联系 "+houseDetailList.get(0).getUserName());
+
     }
 
     private void initInstall() {
@@ -270,7 +272,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         switch (v.getId()) {
             case R.id.btnPhone :
                 Intent dialIntent =  new Intent(Intent.ACTION_DIAL);//跳转到拨号界面，同时传递电话号码
-                Uri data = Uri.parse("tel:" + "18888888888");
+                Uri data = Uri.parse("tel:" + houseDetailList.get(0).getUserTel());
                 dialIntent.setData(data);
                 startActivity(dialIntent);
                 break;
