@@ -6,7 +6,6 @@ public class HouseInfo implements Serializable {
     private String id;
     private String city;
     private String type;
-    private String uid;
     private String title;
     private int totalPrice;
     private String positionInfo;
@@ -37,14 +36,6 @@ public class HouseInfo implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getTitle() {
