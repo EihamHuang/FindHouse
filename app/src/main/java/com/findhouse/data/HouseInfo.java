@@ -13,6 +13,15 @@ public class HouseInfo implements Serializable {
     private String regionInfo;
     private String img;
     private String detail;
+    private String isOrder;
+
+    public String getIsOrder() {
+        return isOrder;
+    }
+
+    public void setIsOrder(String isOrder) {
+        this.isOrder = isOrder;
+    }
 
     public String getId() {
         return id;

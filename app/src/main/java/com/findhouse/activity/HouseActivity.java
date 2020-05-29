@@ -67,6 +67,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private TextView houseFloor;
     private TextView houseDes;
 
+    private Bundle bundle;
     private boolean hasResult = false;
     private HouseInfo houseInfo;
     private List<HouseDetail> houseDetailList;
@@ -84,7 +85,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         btnOrder.setOnClickListener(this);
 
         Intent intent = this.getIntent();
-        Bundle bundle = intent.getExtras();
+        bundle = intent.getExtras();
         houseInfo = (HouseInfo) bundle.getSerializable(KEY_HOUSE);
 
         Url baseUrl = new Url();
@@ -275,7 +276,9 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                 startActivity(dialIntent);
                 break;
             case R.id.btnOrder :
-
+                Intent orderIntent =  new Intent(HouseActivity.this, OrderActivity.class);
+                orderIntent.putExtras(bundle);
+                startActivity(orderIntent);
                 break;
         }
 
