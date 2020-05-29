@@ -14,20 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.findhouse.activity.R;
+import com.findhouse.utils.SpiltUtil;
 
 
 import java.util.List;
 
 public class HouseAdapter extends RecyclerView.Adapter {
-    public static final int TYPE_VERTICAL = 0;
-    public static final int TYPE_HORIZONAL = 1;
     private Context mContext;
     private List<HouseInfo> mHouseList;
     private HouseAdapter.OnItemClickListener mOnItemClickListener;
     protected boolean isScrolling = false;
 
-    private String[] priceType = {"万", "元/月"};
-    private String[] sellType = {"二手", "租房", "新房"};
+    private SpiltUtil spiltUtil = new SpiltUtil();
     private int choosePrice = 0;
     private int chooseSell = 0;
 
@@ -53,19 +51,14 @@ public class HouseAdapter extends RecyclerView.Adapter {
         }
     }
 
-
     public void setScrolling(boolean scrolling) {
         isScrolling = scrolling;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case TYPE_VERTICAL:
-                return new VerticalViewHolder(LayoutInflater.from(parent.getContext())
+        return new VerticalViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.house_item, parent, false));
-        }
-        return null;
     }
 
     @Override
@@ -77,7 +70,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
         RequestOptions optionsVertical = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
-                .error(R.drawable.wait);
+                .error(R.drawable.error);
 
         Glide.with(mContext).load(houseInfo.getImg()).
                 apply(optionsVertical).
@@ -85,18 +78,24 @@ public class HouseAdapter extends RecyclerView.Adapter {
 
         String type = houseInfo.getType();
         switch (type) {
+            case "ershou" :
+                chooseSell = 0;
+                choosePrice = 0;
+                break;
             case "zufang" :
-                choosePrice = 1;
                 chooseSell = 1;
+                choosePrice = 1;
                 break;
             case "xinfang" :
                 chooseSell = 2;
+                choosePrice = 0;
+                break;
         }
 
         holder.houseTitle.setText(houseInfo.getTitle());
         holder.houseArea.setText(houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
-        holder.houseType.setText(sellType[chooseSell]);
-        holder.houseTotalPrice.setText(houseInfo.getTotalPrice()+priceType[choosePrice]);
+        holder.houseType.setText(spiltUtil.sellType[chooseSell]);
+        holder.houseTotalPrice.setText(houseInfo.getTotalPrice()+" "+spiltUtil.priceType[choosePrice]);
 
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +106,6 @@ public class HouseAdapter extends RecyclerView.Adapter {
             });
         }
 
-
     }
 
     @Override
@@ -115,14 +113,10 @@ public class HouseAdapter extends RecyclerView.Adapter {
         return mHouseList.size();
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-//        if(position %2 == 0){
-//            return TYPE_VERTICAL;
-//        } else {
-//            return TYPE_HORIZONAL;
-//        }
-//    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;

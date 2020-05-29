@@ -6,7 +6,7 @@ public class HouseInfo implements Serializable {
     private String id;
     private String city;
     private String type;
-    private String upload_uid;
+    private String uid;
     private String title;
     private int totalPrice;
     private String positionInfo;
@@ -39,12 +39,12 @@ public class HouseInfo implements Serializable {
         this.type = type;
     }
 
-    public String getUpload_uid() {
-        return upload_uid;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUpload_uid(String upload_uid) {
-        this.upload_uid = upload_uid;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getTitle() {

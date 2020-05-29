@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,10 +50,12 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
     private String type = "/house";
     private String route = "/detail";
-    private String[] priceType = {"万", "元/月"};
-    private int choose = 0;
+    private SpiltUtil spiltUtil = new SpiltUtil();
+    private int choosePrice = 0;
 
     private RecyclerView recyclerView;
+    private Button btnPhone;
+    private Button btnOrder;
     private Banner banner;
     private TextView houseTitle;
     private TextView housePosition;
@@ -74,9 +77,11 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_house);
 
-        findViewById(R.id.btnPhone).setOnClickListener(this);
-        findViewById(R.id.btnOrder).setOnClickListener(this);
         banner = findViewById(R.id.banner);
+        btnPhone = findViewById(R.id.btnPhone);
+        btnOrder = findViewById(R.id.btnOrder);
+        btnPhone.setOnClickListener(this);
+        btnOrder.setOnClickListener(this);
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -143,7 +148,11 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         houseDes = findViewById(R.id.houseDes);
 
         if(houseInfo.getType().equals("zufang")) {
-            choose = 1;
+            // 租房类金额为元/月 提供租房下单功能
+            choosePrice = 1;
+            btnOrder.setVisibility(View.VISIBLE);
+        } else {
+            choosePrice = 0;
         }
 
         initInstall();
@@ -151,7 +160,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         houseTitle.setText(houseInfo.getTitle());
         housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
 
-        houseTotalPrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getTotalPrice()+" "+priceType[choose]+"</font>"));
+        houseTotalPrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getTotalPrice()+" "+spiltUtil.priceType[choosePrice]+"</font>"));
         houseArea.setText(Html.fromHtml("面积：<font color='#000000'>"+houseDetailList.get(0).getHouseArea()+" 平方米</font>"));
 
         houseApartment.setText(Html.fromHtml("房型：<font color='#000000'>"+houseDetailList.get(0).getHouseApartment()+"</font>"));
@@ -218,7 +227,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         final RequestOptions optionsVertical = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
-                .error(R.drawable.wait);
+                .error(R.drawable.error);
 
         for (int i=0; i<urls.length; i++) {
             imageList.add(urls[i]);//把图片资源循环放入list里面
