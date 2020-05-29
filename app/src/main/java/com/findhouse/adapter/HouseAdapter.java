@@ -68,13 +68,13 @@ public class HouseAdapter extends RecyclerView.Adapter {
         final VerticalViewHolder holder = (VerticalViewHolder) viewHolder;
         final HouseInfo houseInfo = mHouseList.get(position);
 
-        RequestOptions optionsVertical = new RequestOptions()
+        RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
                 .error(R.drawable.error);
 
         Glide.with(mContext).load(houseInfo.getImg()).
-                apply(optionsVertical).
+                apply(options).
                 into(holder.houseImg);
 
         String type = houseInfo.getType();

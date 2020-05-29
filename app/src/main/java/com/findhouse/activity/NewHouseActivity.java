@@ -1,10 +1,12 @@
 package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,6 +19,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.findhouse.adapter.ApartmentEntity;
 import com.findhouse.data.NewHouseDetail;
 import com.findhouse.data.HouseInfo;
 import com.findhouse.data.JsonData;
@@ -46,6 +51,7 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
     private String route = "/detail";
     private SpiltUtil spiltUtil = new SpiltUtil();
     private int choosePrice = 2;
+    private int apartmentNum = 1;
 
     private RecyclerView rvApartment;
     private Button btnPhone;
@@ -62,7 +68,8 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
 
     private boolean hasResult = false;
     private HouseInfo houseInfo;
-    private List<NewHouseDetail> NewHouseDetailList;
+    private List<NewHouseDetail> newHouseDetailList;
+    private List<ApartmentEntity> apartmentEntityArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +115,7 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
                     @Override
                     public void run() {
                         if(hasResult){
-                            SpiltUtil spiltUtil = new SpiltUtil();
-                            String[] urls = spiltUtil.spiltSemicolon(NewHouseDetailList.get(0).getHouseImg());
+                            String[] urls = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getHouseImg());
                             initImg(urls);
 
                             initDetail();
@@ -137,30 +143,71 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
 
         houseDes = findViewById(R.id.houseDes);
 
-        SpiltUtil spiltUtil = new SpiltUtil();
-        int num = spiltUtil.spiltApartment(NewHouseDetailList.get(0).getHouseApartment());
+        apartmentNum = spiltUtil.spiltApartment(newHouseDetailList.get(0).getHouseApartment());
+
+        initApartment();
 
         houseTitle.setText(houseInfo.getTitle());
         housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
 
         housePrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getPrice()+" "+spiltUtil.priceType[choosePrice]+"</font>"));
-        houseArea.setText(Html.fromHtml("建面：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseArea()+" 平方米</font>"));
+        houseArea.setText(Html.fromHtml("建面：<font color='#000000'>"+newHouseDetailList.get(0).getHouseArea()+" 平方米</font>"));
 
-        houseOpen.setText(Html.fromHtml("开盘：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseOpen()+"</font>"));
-        houseApartment.setText(Html.fromHtml("户型：<font color='#000000'>"+num+"种</font>"));
+        houseOpen.setText(Html.fromHtml("开盘：<font color='#000000'>"+newHouseDetailList.get(0).getHouseOpen()+"</font>"));
+        houseApartment.setText(Html.fromHtml("户型：<font color='#000000'>"+apartmentNum+"种</font>"));
 
-        houseType.setText(Html.fromHtml("用途：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseType()+"</font>"));
+        houseType.setText(Html.fromHtml("用途：<font color='#000000'>"+newHouseDetailList.get(0).getHouseType()+"</font>"));
 
 
-        houseDes.setText(Html.fromHtml("描述：<font color='#000000'>"+NewHouseDetailList.get(0).getHouseDes()+"</font>"));
+        houseDes.setText(Html.fromHtml("描述：<font color='#000000'>"+newHouseDetailList.get(0).getHouseDes()+"</font>"));
 
-        btnPhone.setText("联系 "+NewHouseDetailList.get(0).getUserName());
+        btnPhone.setText("联系 "+newHouseDetailList.get(0).getUserName());
+
+    }
+
+    private void initApartment() {
+        // 以分号分割数据
+        String[] apartmentImg = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentImg());
+        String[] houseApartment = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getHouseApartment());
+        String[] apartmentArea = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentArea());
+        String[] apartmentPrice = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentPrice());
+        for (int i = 0; i < apartmentNum; i++) {
+            ApartmentEntity apartmentEntity = new ApartmentEntity();
+            apartmentEntity.setApartmentImg(apartmentImg[i]);
+            apartmentEntity.setHouseApartment(houseApartment[i]);
+            apartmentEntity.setApattmentArea(apartmentArea[i]);
+            apartmentEntity.setApattmentPrice(apartmentPrice[i]);
+            apartmentEntityArrayList.add(apartmentEntity);
+        }
+        rvApartment = findViewById(R.id.rvApartment);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
+        layoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
+        rvApartment.setLayoutManager(layoutManager);
+        rvApartment.setAdapter(new BaseQuickAdapter<ApartmentEntity, BaseViewHolder>(R.layout.apartment_item, apartmentEntityArrayList) {
+            @Override
+            protected void convert(BaseViewHolder helper, ApartmentEntity item) {
+
+                RequestOptions options = new RequestOptions()
+                        .centerCrop()
+                        .placeholder(R.drawable.wait)
+                        .error(R.drawable.error);
+
+                Glide.with(NewHouseActivity.this).load(item.getApartmentImg()).
+                        apply(options).
+                        into((ImageView) helper.getView(R.id.imageApartment));
+
+                helper.setText(R.id.tvHouseApartment,"户型 " + item.getHouseApartment());
+                helper.setText(R.id.tvApartmentArea, "建面 " + item.getApattmentArea() + "平方米");
+                helper.setText(R.id.tvApartmentPrice, "约 "+ item.getApattmentPrice() + "万/套");
+
+            }
+        });
 
     }
 
     private void initImg(String[] urls) {
         List<String> imageList = new ArrayList<>();
-        final RequestOptions optionsVertical = new RequestOptions()
+        final RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
                 .error(R.drawable.error);
@@ -172,7 +219,7 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
                 @Override
                 public void displayImage(Context context, Object path, ImageView imageView) {
                     Glide.with(NewHouseActivity.this).load(path).
-                            apply(optionsVertical).
+                            apply(options).
                             into(imageView);
                 }
             });
@@ -194,7 +241,7 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
         if(null == parseResult.getData()) {
             return false;
         }else{
-            NewHouseDetailList = parseResult.getData();
+            newHouseDetailList = parseResult.getData();
             return true;
         }
     }
@@ -204,7 +251,7 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
         switch (v.getId()) {
             case R.id.btnPhone :
                 Intent dialIntent =  new Intent(Intent.ACTION_DIAL);//跳转到拨号界面，同时传递电话号码
-                Uri data = Uri.parse("tel:" + NewHouseDetailList.get(0).getUserTel());
+                Uri data = Uri.parse("tel:" + newHouseDetailList.get(0).getUserTel());
                 dialIntent.setData(data);
                 startActivity(dialIntent);
                 break;

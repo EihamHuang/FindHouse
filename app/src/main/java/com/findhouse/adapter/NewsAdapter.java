@@ -104,13 +104,13 @@ public class NewsAdapter extends RecyclerView.Adapter {
 //            ImageTask imageTask = new ImageTask(holder.newsImg, mContext);
 //            imageTask.execute(news.getImgurl());
 //        }
-        RequestOptions optionsVertical = new RequestOptions()
+        RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
                 .error(R.drawable.error);
 
         Glide.with(mContext).load(news.getImgurl()).
-                apply(optionsVertical).
+                apply(options).
                 into(holder.newsImg);
 
         holder.newsTitle.setText(news.getTitle());

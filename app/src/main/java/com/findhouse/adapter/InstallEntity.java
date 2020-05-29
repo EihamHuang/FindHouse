@@ -1,4 +1,4 @@
-package com.findhouse.data;
+package com.findhouse.adapter;
 
 public class InstallEntity {
     private String install;

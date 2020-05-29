@@ -24,7 +24,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.findhouse.data.HouseDetail;
 
 import com.findhouse.data.HouseInfo;
-import com.findhouse.data.InstallEntity;
+import com.findhouse.adapter.InstallEntity;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.SpiltUtil;
@@ -118,7 +118,6 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                     @Override
                     public void run() {
                         if(hasResult){
-                            SpiltUtil spiltUtil = new SpiltUtil();
                             String[] urls = spiltUtil.spiltSemicolon(houseDetailList.get(0).getHouseImg());
                             initImg(urls);
 
@@ -182,10 +181,8 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     }
 
     private void initInstall() {
-        SpiltUtil spiltUtil = new SpiltUtil();
-        int[] installId = new int[10];
-        installId = spiltUtil.spiltInstall(houseDetailList.get(0).getHouseInstall());
-        for (int i = 0; i < 10; i++) {
+        int[] installId = spiltUtil.spiltInstall(houseDetailList.get(0).getHouseInstall());
+        for (int i = 0; i < installId.length; i++) {
             InstallEntity installEntity = new InstallEntity();
             installEntity.setId(installId[i]);
             installEntity.setInstall(spiltUtil.installType[i]);
@@ -229,7 +226,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
     private void initImg(String[] urls) {
         List<String> imageList = new ArrayList<>();
-        final RequestOptions optionsVertical = new RequestOptions()
+        final RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
                 .error(R.drawable.error);
@@ -241,7 +238,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                 @Override
                 public void displayImage(Context context, Object path, ImageView imageView) {
                     Glide.with(HouseActivity.this).load(path).
-                            apply(optionsVertical).
+                            apply(options).
                             into(imageView);
                 }
             });
