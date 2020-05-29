@@ -54,7 +54,7 @@
                 android:background="#ffcccccc"/>
 
             <TextView
-                android:id="@+id/houseTotalPrice"
+                android:id="@+id/housePrice"
                 android:layout_below="@id/split"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
@@ -73,7 +73,7 @@
                 android:id="@+id/houseApartment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/houseTotalPrice"
+                android:layout_below="@id/housePrice"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp" />
 

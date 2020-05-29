@@ -59,7 +59,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private Banner banner;
     private TextView houseTitle;
     private TextView housePosition;
-    private TextView houseTotalPrice;
+    private TextView housePrice;
     private TextView houseArea;
     private TextView houseApartment;
     private TextView houseFix;
@@ -140,19 +140,25 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         houseTitle = findViewById(R.id.houseTitle);
         houseArea = findViewById(R.id.houseArea);
         housePosition = findViewById(R.id.housePosition);
-        houseTotalPrice = findViewById(R.id.houseTotalPrice);
+        housePrice = findViewById(R.id.housePrice);
         houseApartment = findViewById(R.id.houseApartment);
         houseFix = findViewById(R.id.houseFix);
         houseOrientation = findViewById(R.id.houseOrientation);
         houseFloor = findViewById(R.id.houseFloor);
         houseDes = findViewById(R.id.houseDes);
 
-        if(houseInfo.getType().equals("zufang")) {
-            // 租房类金额为元/月 提供租房下单功能
-            choosePrice = 1;
-            btnOrder.setVisibility(View.VISIBLE);
-        } else {
-            choosePrice = 0;
+        String type = houseInfo.getType();
+        switch (type) {
+            case "ershou" :
+                choosePrice = 0;
+                break;
+            case "zufang" :
+                choosePrice = 1;
+                btnOrder.setVisibility(View.VISIBLE);
+                break;
+            case "xinfang" :
+                choosePrice = 2;
+                break;
         }
 
         initInstall();
@@ -160,7 +166,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         houseTitle.setText(houseInfo.getTitle());
         housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
 
-        houseTotalPrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getTotalPrice()+" "+spiltUtil.priceType[choosePrice]+"</font>"));
+        housePrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getPrice()+" "+spiltUtil.priceType[choosePrice]+"</font>"));
         houseArea.setText(Html.fromHtml("面积：<font color='#000000'>"+houseDetailList.get(0).getHouseArea()+" 平方米</font>"));
 
         houseApartment.setText(Html.fromHtml("房型：<font color='#000000'>"+houseDetailList.get(0).getHouseApartment()+"</font>"));

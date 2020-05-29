@@ -7,7 +7,7 @@ public class HouseInfo implements Serializable {
     private String city;
     private String type;
     private String title;
-    private int totalPrice;
+    private int price;
     private String positionInfo;
     private String areaInfo;
     private String regionInfo;
@@ -46,12 +46,12 @@ public class HouseInfo implements Serializable {
         this.title = title;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public int getPrice() {
+        return price;
     }
 
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getPositionInfo() {

@@ -40,7 +40,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
         TextView houseTitle;
         TextView houseArea;
         TextView houseType;
-        TextView houseTotalPrice;
+        TextView housePrice;
 
         public VerticalViewHolder(View view) {
             super(view);
@@ -48,7 +48,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
             houseTitle = view.findViewById(R.id.house_title);
             houseArea = view.findViewById(R.id.house_area);
             houseType = view.findViewById(R.id.house_type);
-            houseTotalPrice = view.findViewById(R.id.house_totalPrice);
+            housePrice = view.findViewById(R.id.house_price);
         }
     }
 
@@ -89,14 +89,14 @@ public class HouseAdapter extends RecyclerView.Adapter {
                 break;
             case "xinfang" :
                 chooseSell = 2;
-                choosePrice = 0;
+                choosePrice = 2;
                 break;
         }
 
         holder.houseTitle.setText(houseInfo.getTitle());
         holder.houseArea.setText(houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
         holder.houseType.setText(spiltUtil.sellType[chooseSell]);
-        holder.houseTotalPrice.setText(houseInfo.getTotalPrice()+" "+spiltUtil.priceType[choosePrice]);
+        holder.housePrice.setText(houseInfo.getPrice()+" "+spiltUtil.priceType[choosePrice]);
 
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
