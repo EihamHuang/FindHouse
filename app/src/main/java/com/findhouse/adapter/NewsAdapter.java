@@ -1,4 +1,4 @@
-package com.findhouse.data;
+package com.findhouse.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.findhouse.activity.R;
+import com.findhouse.data.News;
 
 import java.util.List;
 

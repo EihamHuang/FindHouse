@@ -1,4 +1,4 @@
-package com.findhouse.data;
+package com.findhouse.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,21 +14,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.findhouse.activity.R;
+import com.findhouse.data.HouseInfo;
+import com.findhouse.utils.SpiltUtil;
+
 
 import java.util.List;
 
-public class InstallAdapter extends RecyclerView.Adapter {
-    public static final int TYPE_VERTICAL = 0;
-    public static final int TYPE_HORIZONAL = 1;
+public class HouseAdapter extends RecyclerView.Adapter {
     private Context mContext;
-    private List<String> mHouseInstallList;
-    private InstallAdapter.OnItemClickListener mOnItemClickListener;
+    private List<HouseInfo> mHouseList;
+    private HouseAdapter.OnItemClickListener mOnItemClickListener;
     protected boolean isScrolling = false;
 
-    private String[] installType = {"洗衣机", "空调", "衣柜","电视", "冰箱", "热水器","床", "暖气", "宽带", "天然气"};
+    private SpiltUtil spiltUtil = new SpiltUtil();
+    private int choosePrice = 0;
+    private int chooseSell = 0;
 
-    public InstallAdapter(List<String> houseInstall, Context context) {
-        mHouseInstallList = houseInstall;
+    public HouseAdapter(List<HouseInfo> houseList, Context context) {
+        mHouseList = houseList;
         mContext = context;
     }
 
@@ -49,28 +52,51 @@ public class InstallAdapter extends RecyclerView.Adapter {
         }
     }
 
-
     public void setScrolling(boolean scrolling) {
         isScrolling = scrolling;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case TYPE_VERTICAL:
-                return new InstallAdapter.VerticalViewHolder(LayoutInflater.from(parent.getContext())
+        return new VerticalViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.house_item, parent, false));
-        }
-        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
         Log.d("ViewHolder", "onBindViewHolder: " + position);
-        final InstallAdapter.VerticalViewHolder holder = (InstallAdapter.VerticalViewHolder) viewHolder;
+        final VerticalViewHolder holder = (VerticalViewHolder) viewHolder;
+        final HouseInfo houseInfo = mHouseList.get(position);
 
+        RequestOptions optionsVertical = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.wait)
+                .error(R.drawable.error);
 
+        Glide.with(mContext).load(houseInfo.getImg()).
+                apply(optionsVertical).
+                into(holder.houseImg);
 
+        String type = houseInfo.getType();
+        switch (type) {
+            case "ershou" :
+                chooseSell = 0;
+                choosePrice = 0;
+                break;
+            case "zufang" :
+                chooseSell = 1;
+                choosePrice = 1;
+                break;
+            case "xinfang" :
+                chooseSell = 2;
+                choosePrice = 0;
+                break;
+        }
+
+        holder.houseTitle.setText(houseInfo.getTitle());
+        holder.houseArea.setText(houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
+        holder.houseType.setText(spiltUtil.sellType[chooseSell]);
+        holder.houseTotalPrice.setText(houseInfo.getTotalPrice()+" "+spiltUtil.priceType[choosePrice]);
 
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -81,20 +107,19 @@ public class InstallAdapter extends RecyclerView.Adapter {
             });
         }
 
-
     }
 
     @Override
     public int getItemCount() {
-        return mHouseInstallList.size();
+        return mHouseList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        return position;
     }
 
-    public void setOnItemClickListener(InstallAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
     }
 

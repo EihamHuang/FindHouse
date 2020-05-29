@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.findhouse.data.News;
 
 
-public class ContentActivity extends AppCompatActivity {
+public class NewsActivity extends AppCompatActivity {
 
     protected TextView tv_Content;
     @Override

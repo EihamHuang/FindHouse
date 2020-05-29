@@ -90,7 +90,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         Url baseUrl = new Url();
         baseUrl.setType(type);
         baseUrl.setRoute(route);
-        String url = baseUrl.toString()+"?houseId="+houseInfo.getId();
+        String url = baseUrl.toString()+"?houseId="+houseInfo.getId()+"&type="+houseInfo.getType();
 
         NetworkClient.getRequest(url, new okhttp3.Callback() {
 

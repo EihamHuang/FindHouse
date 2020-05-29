@@ -1,4 +1,4 @@
-package com.findhouse.data;
+package com.findhouse.network;
 
 import android.content.Context;
 import android.graphics.Bitmap;

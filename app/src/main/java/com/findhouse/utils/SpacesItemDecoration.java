@@ -1,4 +1,4 @@
-package com.findhouse.data;
+package com.findhouse.utils;
 
 import android.graphics.Rect;
 import android.view.View;
