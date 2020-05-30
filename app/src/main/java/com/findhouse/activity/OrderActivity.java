@@ -3,7 +3,9 @@ package com.findhouse.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,15 +19,26 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.TimePickerView;
 import com.findhouse.data.HouseDetail;
 import com.findhouse.data.HouseInfo;
+import com.findhouse.data.HouseOrder;
+import com.findhouse.data.JsonData;
+import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.SpiltUtil;
 import com.findhouse.utils.TimeUtil;
-import com.youth.banner.Banner;
+import com.findhouse.utils.Url;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
 import static com.findhouse.fragment.MainFragment.KEY_HOUSE_DETAIL;
@@ -33,8 +46,7 @@ import static com.findhouse.fragment.MainFragment.KEY_HOUSE_DETAIL;
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String type = "/house";
-    private String route = "/detail";
-    private SpiltUtil spiltUtil = new SpiltUtil();
+    private String route = "/order";
 
     private TimePickerView pvTime;
     private TextView startTime;
@@ -53,6 +65,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private String endDay = null;
     private int month = 0;
     private int day = 0;
+    private int price = 0;
+
+    private List<HouseOrder> houseOrder = new ArrayList<>();
+    private SharedPreferences share;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +93,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         startTime.addTextChangedListener(listener(startTime));
         endTime.addTextChangedListener(listener(endTime));
 
-        totalPrice.setText("总价："+houseInfo.getPrice()+"元");
+        totalPrice.setText(price+" 元");
 
         // 控制时间范围(如果不设置范围，则使用默认时间1900-2100年)
         // 系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
@@ -127,12 +143,86 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 }
                 day = timeUtil.getTimeDifference(startDay,endDay);
                 month = timeUtil.getMonth(day);
-                int total = month * houseInfo.getPrice();
-                Log.d("good", String.valueOf(month));
-                totalPrice.setText("总价："+total+"元");
+                price = month * houseInfo.getPrice();
+                totalPrice.setText(price+" 元");
 
             }
         };
+    }
+
+    private void sendOrder() {
+
+        // 从SharedPreferences中获取当前用户uid
+        share = getSharedPreferences("UserNow",
+                Context.MODE_PRIVATE);
+        HouseOrder houseOrderSend = new HouseOrder();
+        houseOrderSend.setHouseId(houseInfo.getId());
+        houseOrderSend.setTenantId(share.getString("uid", ""));
+        houseOrderSend.setLandlordId(houseDetail.getUid());
+        houseOrderSend.setStartTime(startTime.getText().toString());
+        houseOrderSend.setEndTime(endTime.getText().toString());
+        houseOrderSend.setTotalPrice(price);
+
+        Url baseUrl = new Url();
+        baseUrl.setType(type);
+        baseUrl.setRoute(route);
+        String url = baseUrl.toString();
+
+        //使用Gson将对象转换为json字符串
+        Gson gson = new Gson();
+        String json = gson.toJson(houseOrderSend);
+        //MediaType  设置Content-Type 标头中包含的媒体类型值
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8")
+                , json);
+
+        NetworkClient.postRequest(url, requestBody, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+
+                OrderActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(OrderActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseJSON(responseJsonData);
+                OrderActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            Toast.makeText(OrderActivity.this, "租房成功", Toast.LENGTH_SHORT).show();
+                            Intent intent_main = new Intent(OrderActivity.this, MainActivity.class);
+                            startActivity(intent_main);
+                            OrderActivity.this.finish();
+                        }
+                        //  失败
+                        else{
+                            Toast.makeText(OrderActivity.this, "sorry，该房子已出租", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
+
+    }
+
+    private boolean parseJSON(String jsonData) {
+        Gson gson = new Gson();
+        JsonData<HouseOrder> parseData = gson.fromJson(jsonData, new TypeToken<JsonData<HouseOrder>>(){}.getType());
+        if(null == parseData.getData()) {
+            return false;
+        }else{
+            houseOrder = parseData.getData();
+            return true;
+        }
     }
 
     @Override
@@ -145,6 +235,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 pvTime.show(endTime);
                 break;
             case R.id.btnOk :
+                if(price>0) {
+                    sendOrder();
+                } else {
+                    Toast.makeText(OrderActivity.this, "请选择正确的时间", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.btnCancel :
                 onBackPressed();

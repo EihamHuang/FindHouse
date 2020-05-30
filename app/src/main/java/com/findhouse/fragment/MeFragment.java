@@ -21,9 +21,9 @@ import com.findhouse.activity.R;
 import com.findhouse.data.User;
 
 
-public class MeFragment extends BaseFragment {
+public class MeFragment extends BaseFragment implements View.OnClickListener {
     private Context context;
-    private ImageView im;
+    private ImageView image;
     private TextView tv1;
     private TextView tv2;
     private Button btnLogout;
@@ -42,63 +42,28 @@ public class MeFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_me, container, false);
 
         tv1 = view.findViewById(R.id.textView1);
-//        tv2 = (TextView)view.findViewById(R.id.textView2);
-        btnLogout = view.findViewById(R.id.buttonLogout);
-//        btn5 = (Button)view.findViewById(R.id.button5);
-//        ord = (Button)view.findViewById(R.id.btnorder);
-//        accept = (Button)view.findViewById(R.id.btnaccept);
-//        btn3 = (Button)view.findViewById(R.id.button3);
-//
-        share = getActivity().getSharedPreferences("Login",
+        view.findViewById(R.id.btnLogout).setOnClickListener(this);
+
+        share = getActivity().getSharedPreferences("UserNow",
                 Context.MODE_PRIVATE);
-        name = share.getString("Name", "");
+        name = share.getString("name", "");
         tv1.setText(name);
 
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 清除SharedPreferences的数据
+
+        return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnLogout :
                 share.edit()
                         .clear()
                         .apply();
                 Intent intent_login = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent_login);
                 getActivity().onBackPressed();
-            }
-        });
-//
-//        btn3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent3= new Intent(context, AboutusActivity.class);
-//                startActivity(intent3);
-//            }
-//        });
-//
-//        btn5.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                modifyInstallationUser();
-//            }
-//        });
-//
-//        ord.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent_order = new Intent(context, MyOrderActivity.class);
-//                startActivity(intent_order);
-//            }
-//        });
-//
-//        accept.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent_accept = new Intent(context, MyOrderAcceptActivity.class);
-//                startActivity(intent_accept);
-//            }
-//        });
-
-        return view;
+                break;
+        }
     }
-
 }

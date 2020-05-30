@@ -2,7 +2,6 @@ package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +13,6 @@ import com.findhouse.data.JsonData;
 import com.findhouse.data.User;
 import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.Url;
-import com.findhouse.utils.Uuid;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -72,11 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
 
                         // 注册
-                        Uuid newUuid = new Uuid();
-                        String uuid = newUuid.generateShortUuid();
-                        Log.d("okhttp",uuid);
                         User userRegist = new User();
-                        userRegist.setUid(uuid);
                         userRegist.setName(user_name);
                         userRegist.setPass(user_password);
                         userRegist.setTel(user_phone);
@@ -86,10 +80,9 @@ public class RegisterActivity extends AppCompatActivity {
                         baseUrl.setRoute(route);
                         String url = baseUrl.toString();
 
-                        Gson gson = new Gson();
                         //使用Gson将对象转换为json字符串
+                        Gson gson = new Gson();
                         String json = gson.toJson(userRegist);
-
                         //MediaType  设置Content-Type 标头中包含的媒体类型值
                         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8")
                                 , json);

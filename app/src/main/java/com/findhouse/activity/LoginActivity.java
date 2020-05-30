@@ -122,13 +122,14 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if(hasResult){
-
                             // 创建SharedPreferences对象用于储存帐号和密码
-                            share = getSharedPreferences("Login", Context.MODE_PRIVATE);
+                            share = getSharedPreferences("UserNow", Context.MODE_PRIVATE);
                             // 存储数据
                             share.edit()
-                                    .putString("Name", name)
-                                    .putString("Password", pass)
+                                    .putString("uid", user.get(0).getUid())
+                                    .putString("name", name)
+                                    .putString("pass", pass)
+                                    .putString("tel", user.get(0).getTel())
                                     .apply();
 
                             Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();

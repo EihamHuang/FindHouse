@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="浏览历史"
+        android:text="发布房源"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,13 +29,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="8dp"
-        android:text="我买下的"
+        android:text="我租下的"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.737"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnaccept"
+        app:layout_constraintTop_toBottomOf="@+id/btnRent"
         app:layout_constraintVertical_bias="0.024" />
 
     <TextView
@@ -52,7 +52,7 @@
         app:layout_constraintEnd_toStartOf="@+id/btntextchange2"
         app:layout_constraintHorizontal_bias="0.398"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnorder"
+        app:layout_constraintTop_toBottomOf="@+id/btnReleased"
         app:layout_constraintVertical_bias="0.022" />
 
     <ImageView
@@ -75,7 +75,7 @@
         app:layout_constraintVertical_bias="0.069" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnStar"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginTop="8dp"
@@ -93,7 +93,7 @@
         app:layout_constraintVertical_bias="0.546" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnPublish"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="8dp"
@@ -111,13 +111,13 @@
         app:layout_constraintVertical_bias="0.552" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnManage"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/other"
+        android:background="@drawable/manage"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -129,7 +129,7 @@
         app:layout_constraintVertical_bias="0.546" />
 
     <Button
-        android:id="@+id/btnaccept"
+        android:id="@+id/btnRent"
         android:layout_width="70dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
@@ -148,7 +148,7 @@
         app:layout_constraintVertical_bias="0.277" />
 
     <Button
-        android:id="@+id/buttonLogout"
+        android:id="@+id/btnLogout"
         android:layout_width="257dp"
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
@@ -206,7 +206,7 @@
         android:layout_height="wrap_content"
 
         android:layout_marginTop="8dp"
-        android:text="其他服务"
+        android:text="管理房源"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -216,7 +216,7 @@
         app:layout_constraintVertical_bias="0.633" />
 
     <Button
-        android:id="@+id/btnorder"
+        android:id="@+id/btnReleased"
         android:layout_width="70dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
@@ -228,10 +228,10 @@
         android:background="@drawable/upload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.252"
+        app:layout_constraintHorizontal_bias="0.215"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.277" />
+        app:layout_constraintVertical_bias="0.276" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
