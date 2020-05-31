@@ -26,10 +26,14 @@ import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.Url;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import okhttp3.Call;
@@ -47,17 +51,79 @@ public class MainFragment extends BaseFragment {
     private String type = "/house";
     private String route = "/list";
 
+    private HouseAdapter houseAdapter;
+    private RefreshLayout refreshLayout;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager layoutManager;
+
+    private int page = 1;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
 
+        recyclerView = view.findViewById(R.id.recycler_view);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        stringIntegerHashMap.put(SpacesItemDecoration.TOP_DECORATION,25);//顶部间距
+        stringIntegerHashMap.put(SpacesItemDecoration.BOTTOM_DECORATION,25);//底部间距
+        recyclerView.addItemDecoration(new SpacesItemDecoration(stringIntegerHashMap));
+
+        houseAdapter = new HouseAdapter(houseList, getContext());
+        recyclerView.setAdapter(houseAdapter);
+
+        initData(view);
+
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+        refreshLayout.setEnableAutoLoadMore(true);
+        refreshLayout.setEnableLoadMore(true);
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+                refreshLayout.getLayout().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        page = 1;
+                        houseList.clear();
+                        initData(view);
+                        refreshLayout.finishRefresh();
+                        refreshLayout.resetNoMoreData();//setNoMoreData(false);
+                    }
+                }, 500);
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
+                refreshLayout.getLayout().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (page > 4) {
+                            Toast.makeText(getContext(), "暂无更多数据", Toast.LENGTH_SHORT).show();
+                            // 将不会再次触发加载更多事件
+                            refreshLayout.finishLoadMoreWithNoMoreData();
+                            return;
+                        }
+                        initData(view);
+                        refreshLayout.finishLoadMore();
+                    }
+                }, 500);
+            }
+        });
+
+        return view;
+    }
+
+    private void initData(final View view) {
         Url baseUrl = new Url();
         baseUrl.setType(type);
         baseUrl.setRoute(route);
         String url = baseUrl.toString();
-
         NetworkClient.getRequest(url, new okhttp3.Callback() {
 
             @Override
@@ -81,7 +147,9 @@ public class MainFragment extends BaseFragment {
                     @Override
                     public void run() {
                         if(hasResult){
-                            initRecyclerView(houseList,view);
+                            page++;
+                            houseAdapter.notifyDataSetChanged();
+                            setListener(houseList);
                         }
                         //  失败
                         else{
@@ -92,43 +160,18 @@ public class MainFragment extends BaseFragment {
             }
 
         });
-
-        return view;
     }
 
-    private boolean parseJSON(String jsonData) {
-        Gson gson = new Gson();
-        JsonData<HouseInfo> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<HouseInfo>>(){}.getType());
-        if(null == parseResult.getData()) {
-            return false;
-        }else{
-            houseList = parseResult.getData();
-            return true;
-        }
-    }
-
-    private void initRecyclerView(final List<HouseInfo> houseList,final View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
-        final HouseAdapter houseAdapter = new HouseAdapter(houseList, getContext());
-        stringIntegerHashMap.put(SpacesItemDecoration.TOP_DECORATION,25);//顶部间距
-        stringIntegerHashMap.put(SpacesItemDecoration.BOTTOM_DECORATION,25);//底部间距
-        recyclerView.addItemDecoration(new SpacesItemDecoration(stringIntegerHashMap));
-        recyclerView.setAdapter(houseAdapter);
+    private void setListener(final List<HouseInfo> houseList) {
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    houseAdapter.setScrolling(false);
-//                    houseAdapter.notifyDataSetChanged();
                     Glide.with(getContext()).resumeRequests();
                 }
                 else {
-//                    houseAdapter.setScrolling(true);
                     Glide.with(getContext()).pauseRequests();
                 }
             }
@@ -154,6 +197,18 @@ public class MainFragment extends BaseFragment {
 
         });
 
+    }
+
+    private boolean parseJSON(String jsonData) {
+        Gson gson = new Gson();
+        JsonData<HouseInfo> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<HouseInfo>>(){}.getType());
+        if(null == parseResult.getData()) {
+            return false;
+        }else{
+            houseList.removeAll(parseResult.getData());
+            houseList.addAll(parseResult.getData());
+            return true;
+        }
     }
 
 }

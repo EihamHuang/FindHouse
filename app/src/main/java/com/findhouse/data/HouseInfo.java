@@ -15,6 +15,12 @@ public class HouseInfo implements Serializable {
     private String detail;
     private String isOrder;
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof HouseInfo
+                && this.id.equals(((HouseInfo)o).id);
+    }
+
     public String getIsOrder() {
         return isOrder;
     }
