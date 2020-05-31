@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -26,8 +25,8 @@ import com.findhouse.data.NewHouseDetail;
 import com.findhouse.data.HouseInfo;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
-import com.findhouse.utils.SpiltUtil;
-import com.findhouse.utils.Url;
+import com.findhouse.utils.StringUtil;
+import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.youth.banner.Banner;
@@ -49,7 +48,7 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
 
     private String type = "/house";
     private String route = "/detail";
-    private SpiltUtil spiltUtil = new SpiltUtil();
+    private StringUtil stringUtil = new StringUtil();
     private int choosePrice = 2;
     private int apartmentNum = 1;
 
@@ -84,10 +83,10 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
         Bundle bundle = intent.getExtras();
         houseInfo = (HouseInfo) bundle.getSerializable(KEY_HOUSE);
 
-        Url baseUrl = new Url();
-        baseUrl.setType(type);
-        baseUrl.setRoute(route);
-        String url = baseUrl.toString()+"?houseId="+houseInfo.getId()+"&type="+houseInfo.getType();
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute(route);
+        String url = baseUrlUtil.toString()+"?houseId="+houseInfo.getId()+"&type="+houseInfo.getType();
 
         NetworkClient.getRequest(url, new okhttp3.Callback() {
 
@@ -115,7 +114,7 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
                     @Override
                     public void run() {
                         if(hasResult){
-                            String[] urls = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getHouseImg());
+                            String[] urls = stringUtil.spiltSemicolon(newHouseDetailList.get(0).getHouseImg());
                             initImg(urls);
 
                             initDetail();
@@ -143,14 +142,14 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
 
         houseDes = findViewById(R.id.houseDes);
 
-        apartmentNum = spiltUtil.spiltApartment(newHouseDetailList.get(0).getHouseApartment());
+        apartmentNum = stringUtil.spiltApartment(newHouseDetailList.get(0).getHouseApartment());
 
         initApartment();
 
         houseTitle.setText(houseInfo.getTitle());
         housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
 
-        housePrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getPrice()+" "+spiltUtil.priceType[choosePrice]+"</font>"));
+        housePrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getPrice()+" "+ stringUtil.priceType[choosePrice]+"</font>"));
         houseArea.setText(Html.fromHtml("建面：<font color='#000000'>"+newHouseDetailList.get(0).getHouseArea()+" 平方米</font>"));
 
         houseOpen.setText(Html.fromHtml("开盘：<font color='#000000'>"+newHouseDetailList.get(0).getHouseOpen()+"</font>"));
@@ -167,10 +166,10 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
 
     private void initApartment() {
         // 以分号分割数据
-        String[] apartmentImg = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentImg());
-        String[] houseApartment = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getHouseApartment());
-        String[] apartmentArea = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentArea());
-        String[] apartmentPrice = spiltUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentPrice());
+        String[] apartmentImg = stringUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentImg());
+        String[] houseApartment = stringUtil.spiltSemicolon(newHouseDetailList.get(0).getHouseApartment());
+        String[] apartmentArea = stringUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentArea());
+        String[] apartmentPrice = stringUtil.spiltSemicolon(newHouseDetailList.get(0).getApartmentPrice());
         for (int i = 0; i < apartmentNum; i++) {
             ApartmentEntity apartmentEntity = new ApartmentEntity();
             apartmentEntity.setApartmentImg(apartmentImg[i]);

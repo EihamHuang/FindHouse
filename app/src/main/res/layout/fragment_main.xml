@@ -28,12 +28,25 @@
         >
 
         <Button
+            android:id="@+id/pickType"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorWhite"
+            android:hint="类型"
+            android:textColorHint="@color/colorBlack"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp"/>
+
+        <Button
             android:id="@+id/pickCity"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/colorWhite"
-            android:text="地区"
+            android:hint="地区"
+            android:textColorHint="@color/colorBlack"
+            android:textColor="@color/colorBlack"
             android:textSize="15sp"/>
 
         <Button
@@ -42,16 +55,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/colorWhite"
-            android:text="价格"
-            android:textSize="15sp"/>
-
-        <Button
-            android:id="@+id/pickType"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/colorWhite"
-            android:text="类型"
+            android:hint="价格"
+            android:textColorHint="@color/colorBlack"
+            android:textColor="@color/colorBlack"
             android:textSize="15sp"/>
 
     </LinearLayout>

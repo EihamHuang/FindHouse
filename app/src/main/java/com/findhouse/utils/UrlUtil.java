@@ -1,6 +1,6 @@
 package com.findhouse.utils;
 
-public class Url {
+public class UrlUtil {
     private static String server = "192.168.0.102";  // 服务器
     private String type;    // 请求类目
     private String route;   // 请求路由
@@ -10,7 +10,7 @@ public class Url {
     }
 
     public static void setServer(String server) {
-        Url.server = server;
+        UrlUtil.server = server;
     }
 
     public String getType() {

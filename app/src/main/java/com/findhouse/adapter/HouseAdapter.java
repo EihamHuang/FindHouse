@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.findhouse.activity.R;
 import com.findhouse.data.HouseInfo;
-import com.findhouse.utils.SpiltUtil;
+import com.findhouse.utils.StringUtil;
 
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
     private HouseAdapter.OnItemClickListener mOnItemClickListener;
     protected boolean isScrolling = false;
 
-    private SpiltUtil spiltUtil = new SpiltUtil();
+    private StringUtil stringUtil = new StringUtil();
     private int choosePrice = 0;
     private int chooseSell = 0;
 
@@ -79,15 +79,15 @@ public class HouseAdapter extends RecyclerView.Adapter {
 
         String type = houseInfo.getType();
         switch (type) {
-            case "ershou" :
+            case "二手房" :
                 chooseSell = 0;
                 choosePrice = 0;
                 break;
-            case "zufang" :
+            case "租房" :
                 chooseSell = 1;
                 choosePrice = 1;
                 break;
-            case "xinfang" :
+            case "新房" :
                 chooseSell = 2;
                 choosePrice = 2;
                 break;
@@ -95,8 +95,8 @@ public class HouseAdapter extends RecyclerView.Adapter {
 
         holder.houseTitle.setText(houseInfo.getTitle());
         holder.houseArea.setText(houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
-        holder.houseType.setText(spiltUtil.sellType[chooseSell]);
-        holder.housePrice.setText(houseInfo.getPrice()+" "+spiltUtil.priceType[choosePrice]);
+        holder.houseType.setText(stringUtil.houseType[chooseSell]);
+        holder.housePrice.setText(houseInfo.getPrice()+" "+ stringUtil.priceType[choosePrice]);
 
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {

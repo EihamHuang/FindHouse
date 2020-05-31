@@ -19,7 +19,7 @@ import com.findhouse.data.HouseInfo;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.SpacesItemDecoration;
-import com.findhouse.utils.Url;
+import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -55,10 +55,10 @@ public class OrderViewActivity extends AppCompatActivity {
                 Context.MODE_PRIVATE);
         uid = share.getString("uid", "");
 
-        Url baseUrl = new Url();
-        baseUrl.setType(type);
-        baseUrl.setRoute(route);
-        String url = baseUrl.toString()+"?tenantId="+uid;
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute(route);
+        String url = baseUrlUtil.toString()+"?tenantId="+uid;
 
         NetworkClient.getRequest(url, new okhttp3.Callback() {
 
@@ -140,7 +140,7 @@ public class OrderViewActivity extends AppCompatActivity {
                 HouseInfo houseInfo = houseList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(KEY_HOUSE, houseInfo);
-                if(houseInfo.getType().equals("xinfang")) {
+                if(houseInfo.getType().equals("新房")) {
                     Intent intent = new Intent(OrderViewActivity.this, NewHouseActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);

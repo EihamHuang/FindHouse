@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 import com.findhouse.data.JsonData;
 import com.findhouse.data.User;
 import com.findhouse.network.NetworkClient;
-import com.findhouse.utils.Url;
+import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -86,10 +85,10 @@ public class LoginActivity extends AppCompatActivity {
         userLogin.setName(name);
         userLogin.setPass(pass);
 
-        Url baseUrl = new Url();
-        baseUrl.setType(type);
-        baseUrl.setRoute(route);
-        String url = baseUrl.toString();
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute(route);
+        String url = baseUrlUtil.toString();
 
         Gson gson = new Gson();
         //使用Gson将对象转换为json字符串

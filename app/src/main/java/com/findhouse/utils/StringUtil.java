@@ -1,8 +1,8 @@
 package com.findhouse.utils;
 
-public class SpiltUtil {
+public class StringUtil {
     public final String[] installType = {"洗衣机", "空调", "衣柜","电视", "冰箱", "热水器","床", "暖气", "宽带", "天然气"};
-    public final String[] sellType = {"二手", "租房", "新房"};
+    public final String[] houseType = {"二手房", "租房", "新房"};
     public final String[] priceType = {"万", "元/月", "万元/套"};
 
     public String[] spiltSemicolon(String url) {
@@ -26,5 +26,9 @@ public class SpiltUtil {
             result[i] = url.charAt(i)-'0';
         }
         return result;
+    }
+
+    public String clearChinese(String s) {
+        return s.replaceAll("[\u4e00-\u9fa5]+", "");
     }
 }

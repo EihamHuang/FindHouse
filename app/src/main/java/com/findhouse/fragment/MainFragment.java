@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +29,8 @@ import com.findhouse.data.JsonData;
 import com.findhouse.utils.GetJsonDataUtil;
 import com.findhouse.utils.SpacesItemDecoration;
 import com.findhouse.network.NetworkClient;
-import com.findhouse.utils.Url;
+import com.findhouse.utils.StringUtil;
+import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -60,12 +61,18 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();//市
     private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();//区
 
+    private ArrayList<String> rentPriceList = new ArrayList<>();
+    private ArrayList<String> otherPriceList = new ArrayList<>();
+    private ArrayList<String> typeList = new ArrayList<>();
+
     private String type = "/house";
     private String route = "/list";
 
+    private String houseType = "";
     private String city = "";
     private String region = "";
     private String price = "";
+    private StringUtil stringUtil = new StringUtil();
 
     private Button btnCity;
     private Button btnPrice;
@@ -101,8 +108,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
 
         houseAdapter = new HouseAdapter(houseList, getContext());
         recyclerView.setAdapter(houseAdapter);
-        initJsonData();
 
+        initJsonData();
+        initOtherData();
         initData();
 
         refreshLayout = view.findViewById(R.id.refreshLayout);
@@ -148,10 +156,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void initData() {
-        Url baseUrl = new Url();
-        baseUrl.setType(type);
-        baseUrl.setRoute(route);
-        String url = baseUrl.toString();
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute(route);
+        String url = baseUrlUtil.toString();
         NetworkClient.getRequest(url, new okhttp3.Callback() {
 
             @Override
@@ -211,7 +219,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 HouseInfo houseInfo = houseList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(KEY_HOUSE, houseInfo);
-                if(houseInfo.getType().equals("xinfang")) {
+                if(houseInfo.getType().equals("新房")) {
                     Intent intent = new Intent(getContext(), NewHouseActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -240,7 +248,25 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    private void showPickerView() {// 弹出选择器（省市区三级联动）
+    private void showPickerViewType() {// 弹出选择器（省市区三级联动）
+        OptionsPickerView pvOptions = new OptionsPickerView.Builder(getContext(), new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                //返回的分别是三个级别的选中位置
+                btnType.setText(typeList.get(options1));
+                houseType = typeList.get(options1);
+            }
+        })
+                .setTitleText("类型选择")
+                .setDividerColor(Color.BLACK)
+                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setContentTextSize(20)
+                .build();
+        pvOptions.setPicker(typeList);//一级选择器
+        pvOptions.show();
+    }
+
+    private void showPickerViewCity() {// 弹出选择器（省市区三级联动）
         OptionsPickerView pvOptions = new OptionsPickerView.Builder(getContext(), new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
@@ -259,6 +285,24 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         /*pvOptions.setPicker(options1Items);//一级选择器
         pvOptions.setPicker(options1Items, options2Items);//二级选择器*/
         pvOptions.setPicker(options1Items, options2Items, options3Items);//三级选择器
+        pvOptions.show();
+    }
+
+    private void showPickerViewPrice(final ArrayList<String> priceList) {// 弹出选择器（省市区三级联动）
+        OptionsPickerView pvOptions = new OptionsPickerView.Builder(getContext(), new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                //返回的分别是三个级别的选中位置
+                btnPrice.setText(priceList.get(options1));
+                price = stringUtil.clearChinese(priceList.get(options1));
+            }
+        })
+                .setTitleText("价格选择")
+                .setDividerColor(Color.BLACK)
+                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setContentTextSize(20)
+                .build();
+        pvOptions.setPicker(priceList);//一级选择器
         pvOptions.show();
     }
 
@@ -307,7 +351,27 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    public ArrayList<JsonCity> parseData(String result) {//Gson 解析
+    private void initOtherData() {
+        typeList.add("二手房");
+        typeList.add("新房");
+        typeList.add("租房");
+
+        rentPriceList.add("不限");
+        rentPriceList.add("1000元以下");
+        rentPriceList.add("1000-2000元");
+        rentPriceList.add("2000-3000元");
+        rentPriceList.add("3000-4000元");
+        rentPriceList.add("4000元以上");
+
+        otherPriceList.add("不限");
+        otherPriceList.add("100万以下");
+        otherPriceList.add("100-200万");
+        otherPriceList.add("200-300万");
+        otherPriceList.add("300-400万");
+        otherPriceList.add("400万以上");
+    }
+
+    private ArrayList<JsonCity> parseData(String result) {//Gson 解析
         ArrayList<JsonCity> detail = new ArrayList<>();
         try {
             JSONArray data = new JSONArray(result);
@@ -327,12 +391,20 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.pickType :
+                showPickerViewType();
+                break;
             case R.id.pickCity :
-                showPickerView();
+                showPickerViewCity();
                 break;
             case R.id.pickPrice :
-                break;
-            case R.id.pickType :
+                if(houseType.equals("")) {
+                    Toast.makeText(getContext(), "请先选择房屋类型", Toast.LENGTH_SHORT).show();
+                } else if(type == "租房") {
+                    showPickerViewPrice(rentPriceList);
+                } else {
+                    showPickerViewPrice(otherPriceList);
+                }
                 break;
         }
     }

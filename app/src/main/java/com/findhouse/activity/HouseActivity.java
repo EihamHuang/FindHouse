@@ -27,8 +27,8 @@ import com.findhouse.data.HouseInfo;
 import com.findhouse.adapter.InstallEntity;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
-import com.findhouse.utils.SpiltUtil;
-import com.findhouse.utils.Url;
+import com.findhouse.utils.StringUtil;
+import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.youth.banner.Banner;
@@ -51,7 +51,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
     private String type = "/house";
     private String route = "/detail";
-    private SpiltUtil spiltUtil = new SpiltUtil();
+    private StringUtil stringUtil = new StringUtil();
     private int choosePrice = 0;
 
     private RecyclerView recyclerView;
@@ -89,10 +89,10 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         bundle = intent.getExtras();
         houseInfo = (HouseInfo) bundle.getSerializable(KEY_HOUSE);
 
-        Url baseUrl = new Url();
-        baseUrl.setType(type);
-        baseUrl.setRoute(route);
-        String url = baseUrl.toString()+"?houseId="+houseInfo.getId()+"&type="+houseInfo.getType();
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute(route);
+        String url = baseUrlUtil.toString()+"?houseId="+houseInfo.getId()+"&type="+houseInfo.getType();
 
         NetworkClient.getRequest(url, new okhttp3.Callback() {
 
@@ -120,7 +120,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                     @Override
                     public void run() {
                         if(hasResult){
-                            String[] urls = spiltUtil.spiltSemicolon(houseDetailList.get(0).getHouseImg());
+                            String[] urls = stringUtil.spiltSemicolon(houseDetailList.get(0).getHouseImg());
                             initImg(urls);
 
                             initDetail();
@@ -156,14 +156,14 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
 
         String type = houseInfo.getType();
         switch (type) {
-            case "ershou" :
+            case "二手房" :
                 choosePrice = 0;
                 break;
-            case "zufang" :
+            case "租房" :
                 choosePrice = 1;
                 btnOrder.setVisibility(View.VISIBLE);
                 break;
-            case "xinfang" :
+            case "新房" :
                 choosePrice = 2;
                 break;
         }
@@ -173,7 +173,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         houseTitle.setText(houseInfo.getTitle());
         housePosition.setText(houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
 
-        housePrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getPrice()+" "+spiltUtil.priceType[choosePrice]+"</font>"));
+        housePrice.setText(Html.fromHtml("价格：<font color='#000000'>"+houseInfo.getPrice()+" "+ stringUtil.priceType[choosePrice]+"</font>"));
         houseArea.setText(Html.fromHtml("面积：<font color='#000000'>"+houseDetailList.get(0).getHouseArea()+" 平方米</font>"));
 
         houseApartment.setText(Html.fromHtml("房型：<font color='#000000'>"+houseDetailList.get(0).getHouseApartment()+"</font>"));
@@ -189,11 +189,11 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     }
 
     private void initInstall() {
-        int[] installId = spiltUtil.spiltInstall(houseDetailList.get(0).getHouseInstall());
+        int[] installId = stringUtil.spiltInstall(houseDetailList.get(0).getHouseInstall());
         for (int i = 0; i < installId.length; i++) {
             InstallEntity installEntity = new InstallEntity();
             installEntity.setId(installId[i]);
-            installEntity.setInstall(spiltUtil.installType[i]);
+            installEntity.setInstall(stringUtil.installType[i]);
             installEntityList.add(installEntity);
         }
 

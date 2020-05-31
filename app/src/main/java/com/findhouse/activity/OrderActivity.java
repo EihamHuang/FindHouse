@@ -1,7 +1,6 @@
 package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,14 +21,12 @@ import com.findhouse.data.HouseInfo;
 import com.findhouse.data.HouseOrder;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
-import com.findhouse.utils.SpiltUtil;
 import com.findhouse.utils.TimeUtil;
-import com.findhouse.utils.Url;
+import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,7 +96,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         // 系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
         Calendar selectedDate = Calendar.getInstance();
         Calendar startDate = Calendar.getInstance();
-        startDate.set(2020, 0, 0);
+        startDate.set(2020, 0, 1);
         Calendar endDate = Calendar.getInstance();
         endDate.set(2029, 11, 28);
         //时间选择器
@@ -111,6 +107,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 TextView tv = (TextView) v;
                 tv.setText(timeUtil.dateToStr(date));
             }})
+            .setTitleText("时间选择")
             .setType(new boolean[]{true, true, true, false, false, false})
             .setLabel("年", "月", "日", "", "", "")
             .isCenterLabel(true)
@@ -164,10 +161,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         houseOrderSend.setEndTime(endTime.getText().toString());
         houseOrderSend.setTotalPrice(price);
 
-        Url baseUrl = new Url();
-        baseUrl.setType(type);
-        baseUrl.setRoute(route);
-        String url = baseUrl.toString();
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute(route);
+        String url = baseUrlUtil.toString();
 
         //使用Gson将对象转换为json字符串
         Gson gson = new Gson();

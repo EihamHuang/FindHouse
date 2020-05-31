@@ -3,7 +3,6 @@ package com.findhouse.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,7 +11,7 @@ import android.widget.Toast;
 import com.findhouse.data.JsonData;
 import com.findhouse.data.User;
 import com.findhouse.network.NetworkClient;
-import com.findhouse.utils.Url;
+import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -75,10 +74,10 @@ public class RegisterActivity extends AppCompatActivity {
                         userRegist.setPass(user_password);
                         userRegist.setTel(user_phone);
 
-                        Url baseUrl = new Url();
-                        baseUrl.setType(type);
-                        baseUrl.setRoute(route);
-                        String url = baseUrl.toString();
+                        UrlUtil baseUrlUtil = new UrlUtil();
+                        baseUrlUtil.setType(type);
+                        baseUrlUtil.setRoute(route);
+                        String url = baseUrlUtil.toString();
 
                         //使用Gson将对象转换为json字符串
                         Gson gson = new Gson();
