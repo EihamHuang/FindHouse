@@ -122,7 +122,7 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
                         }
                         //  失败
                         else{
-                            Toast.makeText(NewHouseActivity.this, "暂时无内容，请稍候重试～", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(NewHouseActivity.this, "暂时无内容～", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

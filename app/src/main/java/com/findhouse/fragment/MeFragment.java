@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.findhouse.activity.LoginActivity;
+import com.findhouse.activity.OrderViewActivity;
 import com.findhouse.activity.R;
 import com.findhouse.data.User;
 
@@ -42,6 +43,12 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_me, container, false);
 
         tv1 = view.findViewById(R.id.textView1);
+
+        view.findViewById(R.id.btnReleased).setOnClickListener(this);
+        view.findViewById(R.id.btnRent).setOnClickListener(this);
+        view.findViewById(R.id.btnStar).setOnClickListener(this);
+        view.findViewById(R.id.btnPublish).setOnClickListener(this);
+        view.findViewById(R.id.btnManage).setOnClickListener(this);
         view.findViewById(R.id.btnLogout).setOnClickListener(this);
 
         share = getActivity().getSharedPreferences("UserNow",
@@ -56,6 +63,12 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btnReleased:
+                break;
+            case R.id.btnRent:
+                Intent orderIntent =  new Intent(getContext(), OrderViewActivity.class);
+                startActivity(orderIntent);
+                break;
             case R.id.btnLogout :
                 share.edit()
                         .clear()

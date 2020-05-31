@@ -85,7 +85,7 @@ public class MainFragment extends BaseFragment {
                         }
                         //  失败
                         else{
-                            Toast.makeText(getContext(), "暂时无内容，请稍候重试～", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "暂时无内容～", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

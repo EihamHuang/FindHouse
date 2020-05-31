@@ -93,7 +93,7 @@ public class NewsFragment extends BaseFragment {
                         }
                         //  该关键词没有结果
                         else{
-                            Toast.makeText(getContext(), "暂时无内容，请稍候重试～", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "暂时无内容～", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

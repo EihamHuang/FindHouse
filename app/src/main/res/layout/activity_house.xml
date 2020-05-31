@@ -161,10 +161,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:text="租房"
+            android:enabled="false"
+            android:text="已出租"
             android:textSize="20sp"
             android:textColor="@android:color/background_light"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorGray"
             android:layout_weight="1"
             android:layout_marginRight="0.5dp"
             android:layout_marginLeft="0.5dp" />

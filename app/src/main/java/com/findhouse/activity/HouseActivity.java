@@ -127,7 +127,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                         }
                         //  失败
                         else{
-                            Toast.makeText(HouseActivity.this, "暂时无内容，请稍候重试～", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HouseActivity.this, "暂时无内容～", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -138,6 +138,12 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     }
 
     private void initDetail() {
+        // 未出租的房子才可租房
+        if(houseInfo.getIsOrder().equals("0")) {
+            btnOrder.setEnabled(true);
+            btnOrder.setText("租房");
+            btnOrder.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        }
         houseTitle = findViewById(R.id.houseTitle);
         houseArea = findViewById(R.id.houseArea);
         housePosition = findViewById(R.id.housePosition);
