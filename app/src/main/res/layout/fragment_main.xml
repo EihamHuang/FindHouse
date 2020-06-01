@@ -2,29 +2,34 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/titleName"
+    <LinearLayout
+        android:id="@+id/titleLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:text="找房子"
-        android:textColor="@android:color/background_light"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/titleName"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="找房子"
+            android:textColor="@android:color/background_light"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/pickLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:layout_below="@id/titleName"
+        android:layout_below="@id/titleLayout"
         >
 
         <Button
@@ -75,6 +80,7 @@
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
+        srlClassicsSpinnerStyle="FixedBehind"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/pickLayout"

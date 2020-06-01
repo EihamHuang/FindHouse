@@ -146,12 +146,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 refreshLayout.getLayout().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (page > 10) {
-                            Toast.makeText(getContext(), "暂无更多数据", Toast.LENGTH_SHORT).show();
-                            // 将不会再次触发加载更多事件
-                            refreshLayout.finishLoadMoreWithNoMoreData();
-                            return;
-                        }
                         initData(houseType, city, region, price, sort);
                         refreshLayout.finishLoadMore();
                     }
