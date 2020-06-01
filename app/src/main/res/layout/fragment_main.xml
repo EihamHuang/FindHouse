@@ -60,6 +60,17 @@
             android:textColor="@color/colorBlack"
             android:textSize="15sp"/>
 
+        <Button
+            android:id="@+id/pickSort"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorWhite"
+            android:hint="排序"
+            android:textColorHint="@color/colorBlack"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp"/>
+
     </LinearLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout

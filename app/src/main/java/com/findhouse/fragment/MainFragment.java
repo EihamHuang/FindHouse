@@ -64,6 +64,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     private ArrayList<String> rentPriceList = new ArrayList<>();
     private ArrayList<String> ershouPriceList = new ArrayList<>();
     private ArrayList<String> xinfangPriceList = new ArrayList<>();
+    private ArrayList<String> sortList = new ArrayList<>();
     private ArrayList<String> typeList = new ArrayList<>();
 
     private String type = "/house";
@@ -73,11 +74,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     private String city = "";
     private String region = "";
     private String price = "";
+    private String sort = "";
     private StringUtil stringUtil = new StringUtil();
 
     private Button btnCity;
     private Button btnPrice;
     private Button btnType;
+    private Button btnSort;
     private HouseAdapter houseAdapter;
     private RefreshLayout refreshLayout;
     private RecyclerView recyclerView;
@@ -95,9 +98,12 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         btnCity = view.findViewById(R.id.pickCity);
         btnPrice = view.findViewById(R.id.pickPrice);
         btnType = view.findViewById(R.id.pickType);
+        btnSort = view.findViewById(R.id.pickSort);
+
         btnCity.setOnClickListener(this);
         btnPrice.setOnClickListener(this);
         btnType.setOnClickListener(this);
+        btnSort.setOnClickListener(this);
 
         recyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
@@ -112,7 +118,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
 
         initJsonData();
         initOtherData();
-        initData(houseType, city, region, price);
+        initData(houseType, city, region, price, sort);
 
         refreshLayout = view.findViewById(R.id.refreshLayout);
         refreshLayout.setEnableAutoLoadMore(true);
@@ -127,7 +133,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                         page = 1;
                         houseList.clear();
 
-                        initData(houseType, city, region, price);
+                        initData(houseType, city, region, price, sort);
                         refreshLayout.finishRefresh();
                         refreshLayout.resetNoMoreData();//setNoMoreData(false);
                     }
@@ -146,7 +152,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                             refreshLayout.finishLoadMoreWithNoMoreData();
                             return;
                         }
-                        initData(houseType, city, region, price);
+                        initData(houseType, city, region, price, sort);
                         refreshLayout.finishLoadMore();
                     }
                 }, 500);
@@ -155,15 +161,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         return view;
     }
 
-    private void initData(final String houseType,final String city,final String region,final String price) {
+    private void initData(String houseType,String city,String region,String price,String sort) {
         UrlUtil baseUrlUtil = new UrlUtil();
         baseUrlUtil.setType(type);
         baseUrlUtil.setRoute(route);
         String url = baseUrlUtil.toString();
 
-        if(houseType!="" || city!="" || region!="" || price!="") {
+        if(houseType!="" || city!="" || region!="" || price!="" || sort!="") {
             baseUrlUtil.setRoute("/select");
-            url = baseUrlUtil.toString()+"?type="+houseType+"&city="+city+"&region="+region+"&price="+price;
+            url = baseUrlUtil.toString()+"?type="+houseType+"&city="+city
+                    +"&region="+region+"&price="+price+"&sort="+sort;
         }
 
         NetworkClient.getRequest(url, new okhttp3.Callback() {
@@ -313,6 +320,24 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         pvOptions.show();
     }
 
+    private void showPickerViewSort(final ArrayList<String> sortList) {// 弹出选择器（省市区三级联动）
+        OptionsPickerView pvOptions = new OptionsPickerView.Builder(getContext(), new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                //返回的分别是三个级别的选中位置
+                btnSort.setText(sortList.get(options1));
+                sort = sortList.get(options1);
+                refreshLayout.autoRefresh();
+            }
+        })
+                .setTitleText("排序选择")
+                .setDividerColor(Color.BLACK)
+                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setContentTextSize(20)
+                .build();
+        pvOptions.setPicker(sortList);//一级选择器
+        pvOptions.show();
+    }
 
     private void initJsonData() {//解析数据 （省市区三级联动）
         String JsonData = new GetJsonDataUtil().getJson(getContext(), "province.json");//获取assets目录下的json文件数据
@@ -383,6 +408,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         xinfangPriceList.add("750-1000万");
         xinfangPriceList.add("1000-1500万");
         xinfangPriceList.add("1500万以上");
+
+        sortList.add("默认排序");
+        sortList.add("价格升序");
+        sortList.add("价格降序");
     }
 
     private ArrayList<JsonCity> parseData(String result) {//Gson 解析
@@ -424,6 +453,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                     showPickerViewPrice(xinfangPriceList);
                 } else {
                     showPickerViewPrice(ershouPriceList);
+                }
+                break;
+            case R.id.pickSort :
+                if(houseType == "") {
+                    Toast.makeText(getContext(), "请先选择房屋类型", Toast.LENGTH_SHORT).show();
+                } else {
+                    showPickerViewSort(sortList);
                 }
                 break;
         }
