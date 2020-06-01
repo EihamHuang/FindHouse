@@ -62,7 +62,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();//区
 
     private ArrayList<String> rentPriceList = new ArrayList<>();
-    private ArrayList<String> otherPriceList = new ArrayList<>();
+    private ArrayList<String> ershouPriceList = new ArrayList<>();
+    private ArrayList<String> xinfangPriceList = new ArrayList<>();
     private ArrayList<String> typeList = new ArrayList<>();
 
     private String type = "/house";
@@ -111,7 +112,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
 
         initJsonData();
         initOtherData();
-        initData();
+        initData(houseType, city, region, price);
 
         refreshLayout = view.findViewById(R.id.refreshLayout);
         refreshLayout.setEnableAutoLoadMore(true);
@@ -126,7 +127,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                         page = 1;
                         houseList.clear();
 
-                        initData();
+                        initData(houseType, city, region, price);
                         refreshLayout.finishRefresh();
                         refreshLayout.resetNoMoreData();//setNoMoreData(false);
                     }
@@ -145,21 +146,26 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                             refreshLayout.finishLoadMoreWithNoMoreData();
                             return;
                         }
-                        initData();
+                        initData(houseType, city, region, price);
                         refreshLayout.finishLoadMore();
                     }
                 }, 500);
             }
         });
-
         return view;
     }
 
-    private void initData() {
+    private void initData(final String houseType,final String city,final String region,final String price) {
         UrlUtil baseUrlUtil = new UrlUtil();
         baseUrlUtil.setType(type);
         baseUrlUtil.setRoute(route);
         String url = baseUrlUtil.toString();
+
+        if(houseType!="" || city!="" || region!="" || price!="") {
+            baseUrlUtil.setRoute("/select");
+            url = baseUrlUtil.toString()+"?type="+houseType+"&city="+city+"&region="+region+"&price="+price;
+        }
+
         NetworkClient.getRequest(url, new okhttp3.Callback() {
 
             @Override
@@ -255,6 +261,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 //返回的分别是三个级别的选中位置
                 btnType.setText(typeList.get(options1));
                 houseType = typeList.get(options1);
+                refreshLayout.autoRefresh();
             }
         })
                 .setTitleText("类型选择")
@@ -275,6 +282,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                         + options3Items.get(options1).get(options2).get(options3));
                 city = options2Items.get(options1).get(options2);
                 region = options3Items.get(options1).get(options2).get(options3);
+                refreshLayout.autoRefresh();
             }
         })
                 .setTitleText("城市选择")
@@ -282,8 +290,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                 .setContentTextSize(20)
                 .build();
-        /*pvOptions.setPicker(options1Items);//一级选择器
-        pvOptions.setPicker(options1Items, options2Items);//二级选择器*/
         pvOptions.setPicker(options1Items, options2Items, options3Items);//三级选择器
         pvOptions.show();
     }
@@ -294,7 +300,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
                 btnPrice.setText(priceList.get(options1));
-                price = stringUtil.clearChinese(priceList.get(options1));
+                price = priceList.get(options1);
+                refreshLayout.autoRefresh();
             }
         })
                 .setTitleText("价格选择")
@@ -357,18 +364,25 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         typeList.add("租房");
 
         rentPriceList.add("不限");
-        rentPriceList.add("1000元以下");
-        rentPriceList.add("1000-2000元");
+        rentPriceList.add("1500元以下");
+        rentPriceList.add("1500-2000元");
         rentPriceList.add("2000-3000元");
         rentPriceList.add("3000-4000元");
         rentPriceList.add("4000元以上");
 
-        otherPriceList.add("不限");
-        otherPriceList.add("100万以下");
-        otherPriceList.add("100-200万");
-        otherPriceList.add("200-300万");
-        otherPriceList.add("300-400万");
-        otherPriceList.add("400万以上");
+        ershouPriceList.add("不限");
+        ershouPriceList.add("100万以下");
+        ershouPriceList.add("100-200万");
+        ershouPriceList.add("200-300万");
+        ershouPriceList.add("300-400万");
+        ershouPriceList.add("400万以上");
+
+        xinfangPriceList.add("不限");
+        xinfangPriceList.add("500万以下");
+        xinfangPriceList.add("500-750万");
+        xinfangPriceList.add("750-1000万");
+        xinfangPriceList.add("1000-1500万");
+        xinfangPriceList.add("1500万以上");
     }
 
     private ArrayList<JsonCity> parseData(String result) {//Gson 解析
@@ -395,15 +409,21 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 showPickerViewType();
                 break;
             case R.id.pickCity :
-                showPickerViewCity();
+                if(houseType == "") {
+                    Toast.makeText(getContext(), "请先选择房屋类型", Toast.LENGTH_SHORT).show();
+                } else {
+                    showPickerViewCity();
+                }
                 break;
             case R.id.pickPrice :
-                if(houseType.equals("")) {
+                if(houseType == "") {
                     Toast.makeText(getContext(), "请先选择房屋类型", Toast.LENGTH_SHORT).show();
-                } else if(type == "租房") {
+                } else if(houseType == "租房") {
                     showPickerViewPrice(rentPriceList);
+                } else if(houseType == "新房") {
+                    showPickerViewPrice(xinfangPriceList);
                 } else {
-                    showPickerViewPrice(otherPriceList);
+                    showPickerViewPrice(ershouPriceList);
                 }
                 break;
         }

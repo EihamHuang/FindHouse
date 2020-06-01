@@ -94,7 +94,7 @@ public class HouseAdapter extends RecyclerView.Adapter {
         }
 
         holder.houseTitle.setText(houseInfo.getTitle());
-        holder.houseArea.setText(houseInfo.getAreaInfo()+" - "+houseInfo.getPositionInfo());
+        holder.houseArea.setText(houseInfo.getCity()+" - "+houseInfo.getRegionInfo()+" - "+houseInfo.getAreaInfo());
         holder.houseType.setText(stringUtil.houseType[chooseSell]);
         holder.housePrice.setText(houseInfo.getPrice()+" "+ stringUtil.priceType[choosePrice]);
 
