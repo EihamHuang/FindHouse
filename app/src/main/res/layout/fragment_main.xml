@@ -23,14 +23,19 @@
 
     </LinearLayout>
 
+    <android.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/titleLayout" />
+
 
     <LinearLayout
         android:id="@+id/pickLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:layout_below="@id/titleLayout"
-        >
+        android:layout_below="@id/searchView" >
 
         <Button
             android:id="@+id/pickType"
@@ -80,7 +85,6 @@
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
-        srlClassicsSpinnerStyle="FixedBehind"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/pickLayout"
@@ -96,7 +100,6 @@
             app:layout_constraintVertical_bias="0.0" />
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
 
 
 </RelativeLayout>

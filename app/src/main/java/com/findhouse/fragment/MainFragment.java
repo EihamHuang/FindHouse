@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -75,8 +78,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     private String region = "";
     private String price = "";
     private String sort = "";
+    private String word = "";
     private StringUtil stringUtil = new StringUtil();
 
+    private SearchView searchView;
     private Button btnCity;
     private Button btnPrice;
     private Button btnType;
@@ -99,11 +104,42 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         btnPrice = view.findViewById(R.id.pickPrice);
         btnType = view.findViewById(R.id.pickType);
         btnSort = view.findViewById(R.id.pickSort);
+        searchView = view.findViewById(R.id.searchView);
 
         btnCity.setOnClickListener(this);
         btnPrice.setOnClickListener(this);
         btnType.setOnClickListener(this);
         btnSort.setOnClickListener(this);
+
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(true);
+
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.onActionViewExpanded();
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("sss", query+"good");
+                word = query;
+                searchView.clearFocus();  //可以收起键盘
+//                searchView.onActionViewCollapsed();    //可以收起SearchView视图
+                refreshLayout.autoRefresh();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.d("sss", newText);
+                word = "";
+                return false;
+            }
+        });
+
 
         recyclerView = view.findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(getContext());
@@ -118,7 +154,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
 
         initJsonData();
         initOtherData();
-        initData(houseType, city, region, price, sort);
+        initData(houseType, city, region, price, sort, word);
 
         refreshLayout = view.findViewById(R.id.refreshLayout);
         refreshLayout.setEnableAutoLoadMore(true);
@@ -133,7 +169,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                         page = 1;
                         houseList.clear();
 
-                        initData(houseType, city, region, price, sort);
+                        initData(houseType, city, region, price, sort, word);
+
                         refreshLayout.finishRefresh();
                         refreshLayout.resetNoMoreData();//setNoMoreData(false);
                     }
@@ -146,7 +183,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 refreshLayout.getLayout().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        initData(houseType, city, region, price, sort);
+                        initData(houseType, city, region, price, sort, word);
                         refreshLayout.finishLoadMore();
                     }
                 }, 500);
@@ -155,16 +192,16 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         return view;
     }
 
-    private void initData(String houseType,String city,String region,String price,String sort) {
+    private void initData(String houseType,String city,String region,String price,String sort,String word) {
         UrlUtil baseUrlUtil = new UrlUtil();
         baseUrlUtil.setType(type);
         baseUrlUtil.setRoute(route);
         String url = baseUrlUtil.toString();
 
-        if(houseType!="" || city!="" || region!="" || price!="" || sort!="") {
+        if(houseType!="" || city!="" || region!="" || price!="" || sort!="" || word!="") {
             baseUrlUtil.setRoute("/select");
             url = baseUrlUtil.toString()+"?type="+houseType+"&city="+city
-                    +"&region="+region+"&price="+price+"&sort="+sort;
+                    +"&region="+region+"&price="+price+"&sort="+sort+"&word="+word;
         }
 
         NetworkClient.getRequest(url, new okhttp3.Callback() {
@@ -432,11 +469,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 showPickerViewType();
                 break;
             case R.id.pickCity :
-                if(houseType == "") {
-                    Toast.makeText(getContext(), "请先选择房屋类型", Toast.LENGTH_SHORT).show();
-                } else {
-                    showPickerViewCity();
-                }
+                showPickerViewCity();
                 break;
             case R.id.pickPrice :
                 if(houseType == "") {

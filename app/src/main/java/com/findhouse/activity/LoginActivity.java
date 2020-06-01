@@ -129,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                                     .putString("name", name)
                                     .putString("pass", pass)
                                     .putString("tel", user.get(0).getTel())
+                                    .putString("authorization", String.valueOf(user.get(0).getAuthorization()))
                                     .apply();
 
                             Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();

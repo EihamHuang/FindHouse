@@ -8,6 +8,7 @@ public class User implements Serializable {
     private String pass;  // 密码
     private String tel;  // 电话
     private String head;  // 头像
+    private int authorization;  // 权限
 
     public String getUid() {
         return uid;
@@ -49,4 +50,11 @@ public class User implements Serializable {
         this.head = head;
     }
 
+    public int getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(int authorization) {
+        this.authorization = authorization;
+    }
 }
