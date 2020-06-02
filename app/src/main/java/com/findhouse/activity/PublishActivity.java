@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+
+import com.bigkoo.pickerview.OptionsPickerView;
 
 public class PublishActivity extends AppCompatActivity {
 
@@ -17,5 +21,8 @@ public class PublishActivity extends AppCompatActivity {
 
         share = getSharedPreferences("UserNow", Context.MODE_PRIVATE);
 
+
+
     }
+
 }

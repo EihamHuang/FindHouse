@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="type">
+        <item>二手房</item>
+        <item>新房</item>
+        <item>租房</item>
+    </string-array>
+</resources>

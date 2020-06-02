@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="发布房源"
+        android:text="我的收藏"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,13 +75,13 @@
         app:layout_constraintVertical_bias="0.069" />
 
     <Button
-        android:id="@+id/btnStar"
+        android:id="@+id/btnPublish"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:background="@drawable/favorite"
+        android:background="@drawable/publish"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -93,14 +93,14 @@
         app:layout_constraintVertical_bias="0.546" />
 
     <Button
-        android:id="@+id/btnPublish"
+        android:id="@+id/btnStar"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:background="@drawable/history"
+        android:background="@drawable/favorite"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -169,7 +169,6 @@
         android:id="@+id/textView1"
         android:layout_width="82dp"
         android:layout_height="35dp"
-
         android:layout_marginTop="10dp"
         android:hint="姓名"
         android:textColor="@android:color/background_light"
@@ -191,7 +190,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:text="我的收藏"
+        android:text="发布房源"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
