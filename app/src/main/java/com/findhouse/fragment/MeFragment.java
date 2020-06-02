@@ -18,7 +18,9 @@ import androidx.fragment.app.Fragment;
 
 import com.findhouse.activity.LoginActivity;
 import com.findhouse.activity.OrderViewActivity;
+import com.findhouse.activity.PublishActivity;
 import com.findhouse.activity.R;
+import com.findhouse.activity.ReleasedActivity;
 import com.findhouse.data.User;
 
 
@@ -64,10 +66,16 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnReleased:
+                Intent releasedIntent =  new Intent(getContext(), ReleasedActivity.class);
+                startActivity(releasedIntent);
                 break;
             case R.id.btnRent:
                 Intent orderIntent =  new Intent(getContext(), OrderViewActivity.class);
                 startActivity(orderIntent);
+                break;
+            case R.id.btnPublish:
+                Intent publishIntent =  new Intent(getContext(), PublishActivity.class);
+                startActivity(publishIntent);
                 break;
             case R.id.btnLogout :
                 share.edit()

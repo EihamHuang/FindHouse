@@ -14,6 +14,7 @@ public class HouseInfo implements Serializable {
     private String img;
     private String detail;
     private String isOrder;
+    private String uid;
 
     @Override
     public boolean equals(Object o) {
@@ -107,5 +108,13 @@ public class HouseInfo implements Serializable {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

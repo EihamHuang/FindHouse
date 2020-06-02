@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -73,6 +74,8 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private HouseInfo houseInfo;
     private List<HouseDetail> houseDetailList;
     private List<InstallEntity> installEntityList = new ArrayList<>();
+    private SharedPreferences share;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,9 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         Intent intent = this.getIntent();
         bundle = intent.getExtras();
         houseInfo = (HouseInfo) bundle.getSerializable(KEY_HOUSE);
+        share = getSharedPreferences("UserNow",
+                Context.MODE_PRIVATE);
+        uid = share.getString("uid", "");
 
         UrlUtil baseUrlUtil = new UrlUtil();
         baseUrlUtil.setType(type);
@@ -166,6 +172,10 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
             case "新房" :
                 choosePrice = 2;
                 break;
+        }
+
+        if(uid.equals(houseInfo.getId())) {
+
         }
 
         initInstall();
