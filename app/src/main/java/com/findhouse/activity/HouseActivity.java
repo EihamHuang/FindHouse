@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -45,6 +47,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static com.findhouse.fragment.MainFragment.KEY_FROM;
 import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
 import static com.findhouse.fragment.MainFragment.KEY_HOUSE_DETAIL;
 
@@ -54,10 +57,12 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private String route = "/detail";
     private StringUtil stringUtil = new StringUtil();
     private int choosePrice = 0;
+    private String from = "";
 
     private RecyclerView recyclerView;
     private Button btnPhone;
     private Button btnOrder;
+    private Button btnDelete;
     private Banner banner;
     private TextView houseTitle;
     private TextView housePosition;
@@ -85,12 +90,15 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         banner = findViewById(R.id.banner);
         btnPhone = findViewById(R.id.btnPhone);
         btnOrder = findViewById(R.id.btnOrder);
+        btnDelete = findViewById(R.id.btnDelete);
         btnPhone.setOnClickListener(this);
         btnOrder.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
 
         Intent intent = this.getIntent();
         bundle = intent.getExtras();
         houseInfo = (HouseInfo) bundle.getSerializable(KEY_HOUSE);
+        from = bundle.getString(KEY_FROM);
         share = getSharedPreferences("UserNow",
                 Context.MODE_PRIVATE);
         uid = share.getString("uid", "");
@@ -144,12 +152,57 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     }
 
     private void initDetail() {
-        // 未出租的房子才可租房
-        if(houseInfo.getIsOrder().equals("0")) {
-            btnOrder.setEnabled(true);
-            btnOrder.setText("租房");
-            btnOrder.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+        // 已发布房子界面（都是自己的房子）
+        if(from.equals("ReleasedActivity")) {
+            btnOrder.setEnabled(false);
+            btnOrder.setVisibility(View.VISIBLE);
+            btnOrder.setBackgroundColor(getResources().getColor(R.color.colorGray));
+            // 未交易的房子才可删除 租房按钮显示未被租
+            if(houseInfo.getIsOrder().equals("0")) {
+                btnDelete.setEnabled(true);
+                btnDelete.setVisibility(View.VISIBLE);
+                btnOrder.setText("未被租");
+            }
+            // 已交易的房子不能删除 租房按钮显示已被租
+            else {
+                btnOrder.setText("已被租");
+            }
+
         }
+        // 其他界面
+        else {
+            // 自己的房子
+            if(uid.equals(houseInfo.getUid())) {
+                btnOrder.setEnabled(false);
+                btnOrder.setVisibility(View.VISIBLE);
+                btnOrder.setBackgroundColor(getResources().getColor(R.color.colorGray));
+                // 未出租的房子
+                if(houseInfo.getIsOrder().equals("0")) {
+                    btnOrder.setText("未出租");
+                }
+                else {
+                    btnOrder.setText("已出租");
+                }
+            }
+            // 其他人的房子
+            else {
+                btnOrder.setVisibility(View.VISIBLE);
+                // 未出租的房子
+                if(houseInfo.getIsOrder().equals("0")) {
+                    btnOrder.setEnabled(true);
+                    btnOrder.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    btnOrder.setText("租房");
+                }
+                else {
+                    btnOrder.setEnabled(false);
+                    btnOrder.setBackgroundColor(getResources().getColor(R.color.colorGray));
+                    btnOrder.setText("已出租");
+                }
+
+            }
+        }
+
         houseTitle = findViewById(R.id.houseTitle);
         houseArea = findViewById(R.id.houseArea);
         housePosition = findViewById(R.id.housePosition);
@@ -164,18 +217,15 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         switch (type) {
             case "二手房" :
                 choosePrice = 0;
+                btnOrder.setVisibility(View.GONE);
                 break;
             case "租房" :
                 choosePrice = 1;
-                btnOrder.setVisibility(View.VISIBLE);
                 break;
             case "新房" :
                 choosePrice = 2;
+                btnOrder.setVisibility(View.GONE);
                 break;
-        }
-
-        if(uid.equals(houseInfo.getId())) {
-
         }
 
         initInstall();
@@ -297,6 +347,24 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                 bundle.putSerializable(KEY_HOUSE_DETAIL, houseDetailList.get(0));
                 orderIntent.putExtras(bundle);
                 startActivity(orderIntent);
+                break;
+            case R.id.btnDelete :
+                AlertDialog.Builder alterDialog = new AlertDialog.Builder(HouseActivity.this);
+                alterDialog.setTitle("提示");
+                alterDialog.setMessage("确定删除吗？");
+                alterDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(HouseActivity.this, "确定", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                alterDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(HouseActivity.this, "取消", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                alterDialog.show();
                 break;
         }
 

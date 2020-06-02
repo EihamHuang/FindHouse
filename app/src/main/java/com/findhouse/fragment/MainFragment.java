@@ -53,6 +53,7 @@ import okhttp3.Response;
 
 public class MainFragment extends BaseFragment implements View.OnClickListener {
     public static final String KEY_HOUSE = "key_house";
+    public static final String KEY_FROM = "key_from";
     public static final String KEY_HOUSE_DETAIL = "key_house_detail";
 
     private List<HouseInfo> houseList = new ArrayList<>();
@@ -263,6 +264,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 HouseInfo houseInfo = houseList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(KEY_HOUSE, houseInfo);
+                bundle.putString(KEY_FROM, "MainFragment");
                 if(houseInfo.getType().equals("新房")) {
                     Intent intent = new Intent(getContext(), NewHouseActivity.class);
                     intent.putExtras(bundle);

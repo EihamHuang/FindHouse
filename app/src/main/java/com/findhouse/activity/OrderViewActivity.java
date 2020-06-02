@@ -31,6 +31,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static com.findhouse.fragment.MainFragment.KEY_FROM;
 import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
 
 public class OrderViewActivity extends AppCompatActivity {
@@ -140,6 +141,7 @@ public class OrderViewActivity extends AppCompatActivity {
                 HouseInfo houseInfo = houseList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(KEY_HOUSE, houseInfo);
+                bundle.putString(KEY_FROM, "OrderViewActivity");
                 if(houseInfo.getType().equals("新房")) {
                     Intent intent = new Intent(OrderViewActivity.this, NewHouseActivity.class);
                     intent.putExtras(bundle);
