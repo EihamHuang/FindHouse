@@ -3,6 +3,7 @@ package com.findhouse.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.findhouse.data.JsonData;
 import com.findhouse.data.User;
 import com.findhouse.network.NetworkClient;
+import com.findhouse.utils.MD5Util;
 import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String type = "/user";
     private String route = "/regist";
     private List<User> user = new ArrayList<>();
+    private MD5Util md5Util = new MD5Util();
     private boolean hasResult = false;
 
     @Override
@@ -71,7 +74,9 @@ public class RegisterActivity extends AppCompatActivity {
                         // 注册
                         User userRegist = new User();
                         userRegist.setName(user_name);
-                        userRegist.setPass(user_password);
+                        Log.d("good", md5Util.stringToMD5(user_password));
+                        userRegist.setPass(md5Util.stringToMD5(user_password));
+
                         userRegist.setTel(user_phone);
 
                         UrlUtil baseUrlUtil = new UrlUtil();

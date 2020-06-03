@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.findhouse.data.JsonData;
 import com.findhouse.data.User;
 import com.findhouse.network.NetworkClient;
+import com.findhouse.utils.MD5Util;
 import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -38,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private String type = "/user";
     private String route = "/login";
     private List<User> user = new ArrayList<>();
+    private MD5Util md5Util = new MD5Util();
     private boolean hasResult = false;
 
     private String name;
@@ -83,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
     private void doLogin() {
         User userLogin = new User();
         userLogin.setName(name);
-        userLogin.setPass(pass);
+        userLogin.setPass(md5Util.stringToMD5(pass));
 
         UrlUtil baseUrlUtil = new UrlUtil();
         baseUrlUtil.setType(type);
