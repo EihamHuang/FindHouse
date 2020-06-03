@@ -31,12 +31,13 @@ import static com.findhouse.fragment.MainFragment.KEY_TYPE;
 
 
 public class MeFragment extends BaseFragment implements View.OnClickListener {
-    private TextView tv1;
+
+    private TextView tvName;
+    private TextView tvPhone;
 
     private ArrayList<String> typeList = new ArrayList<>();
     private String houseType = "";
 
-    private String name;
     private SharedPreferences share;
 
     @Override
@@ -44,7 +45,8 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_me, container, false);
 
-        tv1 = view.findViewById(R.id.textView1);
+        tvName = view.findViewById(R.id.tvName);
+        tvPhone = view.findViewById(R.id.tvPhone);
 
         view.findViewById(R.id.btnReleased).setOnClickListener(this);
         view.findViewById(R.id.btnRent).setOnClickListener(this);
@@ -55,9 +57,8 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
 
         share = getActivity().getSharedPreferences("UserNow",
                 Context.MODE_PRIVATE);
-        name = share.getString("name", "");
-        tv1.setText(name);
-
+        tvName.setText(share.getString("name", ""));
+        tvPhone.setText(share.getString("tel", ""));
 
         return view;
     }

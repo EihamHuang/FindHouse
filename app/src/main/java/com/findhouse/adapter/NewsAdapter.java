@@ -98,18 +98,18 @@ public class NewsAdapter extends RecyclerView.Adapter {
         final News news = mNewsList.get(position);
 
 //        holder.newsImg.setImageResource(R.drawable.ic_launcher_background);
-//        holder.newsImg.setTag(news.getImgurl());
+//        holder.newsImg.setTag(news.getimgUrl());
 //        holder.newsImg.setTag(R.drawable.ic_launcher_background, position);
 //        if(!isScrolling){
 //            ImageTask imageTask = new ImageTask(holder.newsImg, mContext);
-//            imageTask.execute(news.getImgurl());
+//            imageTask.execute(news.getimgUrl());
 //        }
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.wait)
                 .error(R.drawable.error);
 
-        Glide.with(mContext).load(news.getImgurl()).
+        Glide.with(mContext).load(news.getimgUrl()).
                 apply(options).
                 into(holder.newsImg);
 

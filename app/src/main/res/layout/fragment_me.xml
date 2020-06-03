@@ -165,22 +165,36 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.772" />
 
+
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="82dp"
-        android:layout_height="35dp"
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:hint="姓名"
         android:textColor="@android:color/background_light"
         android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.448"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.103"
+        app:layout_constraintStart_toEndOf="@+id/headImageView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.078" />
+        app:layout_constraintVertical_bias="0.059" />
 
-
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="手机"
+        android:textColor="@android:color/background_light"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.103"
+        app:layout_constraintStart_toEndOf="@+id/headImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.132" />
 
     <TextView
         android:id="@+id/btntextnews"

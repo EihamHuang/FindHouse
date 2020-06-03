@@ -91,7 +91,6 @@ public class NewsFragment extends BaseFragment {
                             // 加载RecyclerView
                             initRecyclerView(newsList,view);
                         }
-                        //  该关键词没有结果
                         else{
                             Toast.makeText(getContext(), "暂时无内容～", Toast.LENGTH_SHORT).show();
                         }
@@ -145,8 +144,6 @@ public class NewsFragment extends BaseFragment {
         newsAdapter.setOnItemClickListener(new NewsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(), "点击新闻： " + position,
-                        Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(NEWS_KEY, newsList.get(position));
                 Intent intent = new Intent(getContext(), NewsActivity.class);

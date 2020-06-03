@@ -19,7 +19,7 @@ public class News implements Serializable {
     private String author_name;
     private String url;
     @SerializedName("thumbnail_pic_s")
-    private String imgurl;
+    private String imgUrl;
     private Bitmap bitmap;
 
     public String getUniquekey() {
@@ -70,12 +70,12 @@ public class News implements Serializable {
         this.url = url;
     }
 
-    public String getImgurl() {
-        return imgurl;
+    public String getimgUrl() {
+        return imgUrl;
     }
 
-    public void setImgurl(String imgurl) {
-        this.imgurl = imgurl;
+    public void setimgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public Bitmap getBitmap() {
