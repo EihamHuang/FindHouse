@@ -169,9 +169,23 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     }
 
     private void initDetail() {
-
         // 已发布房子界面（都是自己的房子）
         if(from.equals("ReleasedActivity")) {
+            btnOrder.setEnabled(false);
+            btnOrder.setVisibility(View.VISIBLE);
+            btnOrder.setBackgroundColor(getResources().getColor(R.color.colorGray));
+            // 未交易的房子租房按钮显示未被租
+            if(houseInfo.getIsOrder().equals("0")) {
+                btnOrder.setText("未被租");
+            }
+            // 已交易的房子租房按钮显示已被租
+            else {
+                btnOrder.setText("已被租");
+            }
+
+        }
+        // 管理界面
+        else if(from.equals("ManageActivity")) {
             btnOrder.setEnabled(false);
             btnOrder.setVisibility(View.VISIBLE);
             btnOrder.setBackgroundColor(getResources().getColor(R.color.colorGray));
@@ -185,7 +199,6 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
             else {
                 btnOrder.setText("已被租");
             }
-
         }
         // 其他界面
         else {
@@ -339,7 +352,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private boolean parseJSON(String jsonData) {
         Gson gson = new Gson();
         JsonData<HouseDetail> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<HouseDetail>>(){}.getType());
-        if(null == parseResult.getData()) {
+        if(null == parseResult.getData() && parseResult.getStat()!=0) {
             return false;
         }else{
             houseDetailList = parseResult.getData();
@@ -464,6 +477,52 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         });
     }
 
+    private void deleteHouse(String houseId) {
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute("/delete");
+        String url = baseUrlUtil.toString()+"?houseId="+houseId;
+
+        NetworkClient.getRequest(url, new okhttp3.Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(HouseActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                int code = response.code();
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseJSON(responseJsonData);
+                Log.d("okhttp", "code: " + code);
+                Log.d("okhttp", "body: " + responseJsonData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            Toast.makeText(HouseActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
+                        //  失败
+                        else{
+                            Toast.makeText(HouseActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -494,13 +553,13 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                 alterDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(HouseActivity.this, "确定", Toast.LENGTH_SHORT).show();
+                        deleteHouse(houseInfo.getId());
                     }
                 });
                 alterDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(HouseActivity.this, "取消", Toast.LENGTH_SHORT).show();
+
                     }
                 });
                 alterDialog.show();

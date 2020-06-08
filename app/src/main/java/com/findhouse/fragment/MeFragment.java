@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.findhouse.activity.LoginActivity;
+import com.findhouse.activity.ManageActivity;
 import com.findhouse.activity.OrderViewActivity;
 import com.findhouse.activity.PublishActivity;
 import com.findhouse.activity.R;
@@ -106,6 +107,10 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.btnPublish:
                 showPickerViewType();
+                break;
+            case R.id.btnManage:
+                Intent manageIntent =  new Intent(getContext(), ManageActivity.class);
+                startActivity(manageIntent);
                 break;
             case R.id.btnLogout :
                 share.edit()
