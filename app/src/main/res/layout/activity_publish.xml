@@ -116,4 +116,38 @@
 
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="确定"
+            android:textSize="20sp"
+            android:textColor="@android:color/background_light"
+            android:background="@color/colorPrimary"
+            android:layout_weight="1"
+            android:layout_marginRight="0.5dp"
+            android:layout_marginLeft="0.5dp"/>
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="取消"
+            android:textSize="20sp"
+            android:textColor="@android:color/background_light"
+            android:background="@color/colorPrimary"
+            android:layout_weight="1"
+            android:layout_marginRight="0.5dp"
+            android:layout_marginLeft="0.5dp" />
+
+    </LinearLayout >
+
+
 </RelativeLayout>

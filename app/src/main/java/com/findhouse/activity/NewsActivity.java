@@ -39,7 +39,6 @@ public class NewsActivity extends AppCompatActivity {
                 view.loadUrl(url);
                 return true;
             }
-
             //网络请求部分
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
@@ -48,7 +47,6 @@ public class NewsActivity extends AppCompatActivity {
                 return super.shouldInterceptRequest(view, url);
             }
         });
-
         webView.loadUrl(url);
     }
 

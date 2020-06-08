@@ -70,13 +70,10 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "手机号不能为空", Toast.LENGTH_SHORT).show();
                             return;
                         }
-
                         // 注册
                         User userRegist = new User();
                         userRegist.setName(user_name);
-                        Log.d("good", md5Util.stringToMD5(user_password));
                         userRegist.setPass(md5Util.stringToMD5(user_password));
-
                         userRegist.setTel(user_phone);
 
                         UrlUtil baseUrlUtil = new UrlUtil();
@@ -88,15 +85,11 @@ public class RegisterActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         String json = gson.toJson(userRegist);
                         //MediaType  设置Content-Type 标头中包含的媒体类型值
-                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8")
-                                , json);
-
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
                         NetworkClient.postRequest(url, requestBody, new okhttp3.Callback() {
-
                             @Override
                             public void onFailure(Call call, IOException e) {
                                 e.printStackTrace();
-
                                 RegisterActivity.this.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -104,7 +97,6 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 String responseJsonData = response.body().string();
@@ -117,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                                             onBackPressed();
                                         }
-                                        //  失败
+                                        //  该用户名已被注册
                                         else{
                                             Toast.makeText(RegisterActivity.this, "该用户已存在", Toast.LENGTH_SHORT).show();
                                         }

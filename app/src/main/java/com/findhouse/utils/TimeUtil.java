@@ -22,12 +22,12 @@ public class TimeUtil {
 
     /**
      * 计算时间差
-     *
      * @param starTime 开始时间
      * @param endTime  结束时间
      * @param
      * @return 返回时间差
      */
+    // 返回天数
     public int getTimeDifference(String starTime, String endTime) {
         int time = 0;
         if(starTime == null || endTime == null) {
@@ -40,13 +40,12 @@ public class TimeUtil {
             long diff = parse1.getTime() - parse.getTime();
             long day = diff / (24 * 60 * 60 * 1000);
             time = (int)day;
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return time;
     }
-
+    // 返回月份
     public int getMonth(int day) {
         int month = 0;
         double a = day;

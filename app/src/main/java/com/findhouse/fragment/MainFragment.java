@@ -159,9 +159,10 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
         initData(houseType, city, region, price, sort, word);
 
         refreshLayout = view.findViewById(R.id.refreshLayout);
+        // 上拉刷新开启
         refreshLayout.setEnableAutoLoadMore(true);
+        // 下拉加载开启
         refreshLayout.setEnableLoadMore(true);
-
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
@@ -170,9 +171,8 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                     public void run() {
                         page = 1;
                         houseList.clear();
-
+                        // 加载房源信息
                         initData(houseType, city, region, price, sort, word);
-
                         refreshLayout.finishRefresh();
                         refreshLayout.resetNoMoreData();//setNoMoreData(false);
                     }
@@ -185,6 +185,7 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 refreshLayout.getLayout().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        // 加载房源信息
                         initData(houseType, city, region, price, sort, word);
                         refreshLayout.finishLoadMore();
                     }
@@ -197,21 +198,19 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     private void initData(String houseType,String city,String region,String price,String sort,String word) {
         UrlUtil baseUrlUtil = new UrlUtil();
         baseUrlUtil.setType(type);
+        // 默认走入/list路由，返回的是随机的10条房源信息
         baseUrlUtil.setRoute(route);
         String url = baseUrlUtil.toString();
-
+        // 形参不为空时才进入/select路由，返回的是筛选后的房源信息
         if(houseType!="" || city!="" || region!="" || price!="" || sort!="" || word!="") {
             baseUrlUtil.setRoute("/select");
             url = baseUrlUtil.toString()+"?type="+houseType+"&city="+city
                     +"&region="+region+"&price="+price+"&sort="+sort+"&word="+word;
         }
-
         NetworkClient.getRequest(url, new okhttp3.Callback() {
-
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -219,7 +218,6 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                     }
                 });
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseJsonData = response.body().string();
@@ -233,14 +231,13 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                             houseAdapter.notifyDataSetChanged();
                             setListener(houseList);
                         }
-                        //  失败
+                        //  无内容
                         else{
                             Toast.makeText(getContext(), "暂时无内容～", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-
         });
     }
 
@@ -374,18 +371,11 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void initJsonData() {//解析数据 （省市区三级联动）
-        String JsonData = new GetJsonDataUtil().getJson(getContext(), "province.json");//获取assets目录下的json文件数据
-
+        //获取assets目录下的json文件数据
+        String JsonData = new GetJsonDataUtil().getJson(getContext(), "province.json");
         ArrayList<JsonCity> jsonCity = parseData(JsonData);//用Gson 转成实体
-
-        /**
-         * 添加省份数据
-         *
-         * 注意：如果是添加的JavaBean实体，则实体类需要实现 IPickerViewData 接口，
-         * PickerView会通过getPickerViewText方法获取字符串显示出来。
-         */
+        // 添加省份数据
         options1Items = jsonCity;
-
         for (int i = 0; i < jsonCity.size(); i++) {//遍历省份
             ArrayList<String> CityList = new ArrayList<>();//该省的城市列表（第二级）
             ArrayList<ArrayList<String>> Province_AreaList = new ArrayList<>();//该省的所有地区列表（第三级）
@@ -404,15 +394,9 @@ public class MainFragment extends BaseFragment implements View.OnClickListener {
                 }
                 Province_AreaList.add(City_AreaList);//添加该省所有地区数据
             }
-
-            /**
-             * 添加城市数据
-             */
+            // 添加城市数据
             options2Items.add(CityList);
-
-            /**
-             * 添加地区数据
-             */
+            // 添加地区数据
             options3Items.add(Province_AreaList);
         }
     }

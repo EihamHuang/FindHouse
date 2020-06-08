@@ -60,6 +60,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private String from = "";
 
     private RecyclerView recyclerView;
+    private Button btnStar;
     private Button btnPhone;
     private Button btnOrder;
     private Button btnDelete;
@@ -88,9 +89,11 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         setContentView(R.layout.activity_house);
 
         banner = findViewById(R.id.banner);
+        btnStar = findViewById(R.id.btnStar);
         btnPhone = findViewById(R.id.btnPhone);
         btnOrder = findViewById(R.id.btnOrder);
         btnDelete = findViewById(R.id.btnDelete);
+        btnStar.setOnClickListener(this);
         btnPhone.setOnClickListener(this);
         btnOrder.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
@@ -256,11 +259,9 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
             installEntity.setInstall(stringUtil.installType[i]);
             installEntityList.add(installEntity);
         }
-
         recyclerView = findViewById(R.id.houseInstall);
         GridLayoutManager layoutManager = new GridLayoutManager(this,5) {
             @Override
-            // 禁止滑动
             public boolean canScrollVertically() {
                 return false;
             }
@@ -272,10 +273,10 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
             protected void convert(BaseViewHolder helper, InstallEntity item) {
                 // 用反射获取图片资源ID
                 try {
-                    int imgID = R.drawable.class.getField( "install"+String.valueOf(helper.getLayoutPosition())).getInt(new R.drawable());
+                    int imgID = R.drawable.class.getField( "install"+
+                            String.valueOf(helper.getLayoutPosition())).getInt(new R.drawable());
                     helper.setText(R.id.tv_houseInstall, item.getInstall());
                     helper.setImageResource(R.id.image_houseInstall, imgID);
-
                     // 没有该设施则变灰
                     if(item.getId()==0) {
                         helper.setTextColor(R.id.tv_houseInstall, Color.parseColor("#ffcccccc"));
@@ -286,7 +287,6 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
@@ -336,6 +336,8 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btnStar :
+                break;
             case R.id.btnPhone :
                 Intent dialIntent =  new Intent(Intent.ACTION_DIAL);//跳转到拨号界面，同时传递电话号码
                 Uri data = Uri.parse("tel:" + houseDetailList.get(0).getUserTel());

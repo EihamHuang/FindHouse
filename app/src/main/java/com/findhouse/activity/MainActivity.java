@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
                 Context.MODE_PRIVATE);
         name = share.getString("name", "");
         pass = share.getString("pass", "");
-
         // 未登录的先登录
         if(name.isEmpty() || pass.isEmpty()) {
             Intent intent_login = new Intent(MainActivity.this, LoginActivity.class);

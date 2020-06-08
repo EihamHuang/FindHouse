@@ -12,7 +12,7 @@
         android:layout_height="60dp"
         android:background="@color/colorPrimary"
         android:gravity="center"
-        android:text="我发布的"
+        android:text="管理房源"
         android:textColor="@android:color/background_light"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

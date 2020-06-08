@@ -125,7 +125,6 @@ public class LoginActivity extends AppCompatActivity {
                         if(hasResult){
                             // 创建SharedPreferences对象用于储存帐号和密码
                             share = getSharedPreferences("UserNow", Context.MODE_PRIVATE);
-                            // 存储数据
                             share.edit()
                                     .putString("uid", user.get(0).getUid())
                                     .putString("name", name)

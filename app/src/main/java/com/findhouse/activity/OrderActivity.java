@@ -149,7 +149,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void sendOrder() {
-
         // 从SharedPreferences中获取当前用户uid
         share = getSharedPreferences("UserNow",
                 Context.MODE_PRIVATE);

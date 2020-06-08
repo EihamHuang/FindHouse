@@ -19,10 +19,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText2"
+    android:id="@+id/editText2"
+    android:layout_width="300dp"
+    android:layout_height="60dp"
+    android:layout_marginTop="8dp"
+    android:drawableLeft="@drawable/password"
+    android:hint="    请输入密码"
+    android:inputType="textPassword"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.495"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/editText1" />
+
+
+    <EditText
+        android:id="@+id/editText4"
         android:layout_width="300dp"
         android:layout_height="60dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="176dp"
         android:drawableLeft="@drawable/password"
         android:hint="    请输入密码"
         android:inputType="textPassword"
@@ -31,19 +45,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText1" />
 
-
-
     <EditText
         android:id="@+id/editText3"
         android:layout_width="300dp"
         android:layout_height="46dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="36dp"
         android:drawableLeft="@drawable/idcard"
         android:hint="  请输入手机号码"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
     <Button
         android:id="@+id/buttonRegister"
         android:layout_width="300dp"
