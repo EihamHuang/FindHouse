@@ -1,6 +1,7 @@
 package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -28,6 +30,7 @@ import com.findhouse.data.HouseDetail;
 
 import com.findhouse.data.HouseInfo;
 import com.findhouse.adapter.InstallEntity;
+import com.findhouse.data.HouseStar;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.StringUtil;
@@ -45,6 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.findhouse.fragment.MainFragment.KEY_FROM;
@@ -57,6 +62,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private String route = "/detail";
     private StringUtil stringUtil = new StringUtil();
     private int choosePrice = 0;
+    private int starFlag = 0;
     private String from = "";
 
     private RecyclerView recyclerView;
@@ -79,6 +85,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     private boolean hasResult = false;
     private HouseInfo houseInfo;
     private List<HouseDetail> houseDetailList;
+    private List<HouseStar> houseStarList;
     private List<InstallEntity> installEntityList = new ArrayList<>();
     private SharedPreferences share;
     private String uid;
@@ -93,6 +100,7 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         btnPhone = findViewById(R.id.btnPhone);
         btnOrder = findViewById(R.id.btnOrder);
         btnDelete = findViewById(R.id.btnDelete);
+
         btnStar.setOnClickListener(this);
         btnPhone.setOnClickListener(this);
         btnOrder.setOnClickListener(this);
@@ -137,6 +145,12 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
                     @Override
                     public void run() {
                         if(hasResult){
+                            starFlag = houseDetailList.get(0).getIsStar();
+                            if(starFlag == 1) {
+                                Drawable drawable = ContextCompat.getDrawable(HouseActivity.this, R.drawable.star);
+                                btnStar.setBackground(drawable);
+                            }
+
                             String[] urls = stringUtil.spiltSemicolon(houseDetailList.get(0).getHouseImg());
                             initImg(urls);
 
@@ -333,10 +347,133 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
         }
     }
 
+    private boolean parseStarJSON(String jsonData) {
+        Gson gson = new Gson();
+        JsonData<HouseStar> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<HouseStar>>(){}.getType());
+        if(null == parseResult.getData() && parseResult.getStat()!=0 ) {
+            return false;
+        }else{
+            houseStarList = parseResult.getData();
+            return true;
+        }
+    }
+
+    private void doStar(String houseId) {
+        HouseStar houseStar = new HouseStar();
+        houseStar.setuId(uid);
+        houseStar.setHouseId(houseId);
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute("/star");
+        String url = baseUrlUtil.toString();
+
+        //使用Gson将对象转换为json字符串
+        Gson gson = new Gson();
+        String json = gson.toJson(houseStar);
+        //MediaType  设置Content-Type 标头中包含的媒体类型值
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8")
+                , json);
+
+        NetworkClient.postRequest(url, requestBody, new okhttp3.Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(HouseActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                int code = response.code();
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseStarJSON(responseJsonData);
+                Log.d("okhttp", "code: " + code);
+                Log.d("okhttp", "body: " + responseJsonData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            Drawable drawable = ContextCompat.getDrawable(HouseActivity.this, R.drawable.star);
+                            btnStar.setBackground(drawable);
+                            starFlag = 1;
+                            Toast.makeText(HouseActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                        }
+                        //  失败
+                        else{
+                            Toast.makeText(HouseActivity.this, "已收藏过", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
+    private void deleteStar(String uid, String houseId) {
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute("/deleteStar");
+        String url = baseUrlUtil.toString()+"?houseId="+houseId+"&uid="+uid;
+
+        NetworkClient.getRequest(url, new okhttp3.Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(HouseActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                int code = response.code();
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseStarJSON(responseJsonData);
+                Log.d("okhttp", "code: " + code);
+                Log.d("okhttp", "body: " + responseJsonData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            Drawable drawable = ContextCompat.getDrawable(HouseActivity.this, R.drawable.unstar);
+                            btnStar.setBackground(drawable);
+                            starFlag = 0;
+                            Toast.makeText(HouseActivity.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
+                        }
+                        //  失败
+                        else{
+                            Toast.makeText(HouseActivity.this, "取消失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnStar :
+                if(starFlag == 0) {
+                    doStar(houseInfo.getId());
+                }
+                else {
+                    deleteStar(uid, houseInfo.getId());
+                }
                 break;
             case R.id.btnPhone :
                 Intent dialIntent =  new Intent(Intent.ACTION_DIAL);//跳转到拨号界面，同时传递电话号码

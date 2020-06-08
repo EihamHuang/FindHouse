@@ -23,6 +23,7 @@ import com.findhouse.activity.OrderViewActivity;
 import com.findhouse.activity.PublishActivity;
 import com.findhouse.activity.R;
 import com.findhouse.activity.ReleasedActivity;
+import com.findhouse.activity.StarViewActivity;
 import com.findhouse.data.User;
 
 import java.util.ArrayList;
@@ -98,6 +99,10 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.btnRent:
                 Intent orderIntent =  new Intent(getContext(), OrderViewActivity.class);
                 startActivity(orderIntent);
+                break;
+            case R.id.btnStar:
+                Intent starIntent =  new Intent(getContext(), StarViewActivity.class);
+                startActivity(starIntent);
                 break;
             case R.id.btnPublish:
                 showPickerViewType();

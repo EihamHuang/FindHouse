@@ -1,11 +1,14 @@
 package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -21,6 +24,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.findhouse.adapter.ApartmentEntity;
+import com.findhouse.data.HouseStar;
 import com.findhouse.data.NewHouseDetail;
 import com.findhouse.data.HouseInfo;
 import com.findhouse.data.JsonData;
@@ -40,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
@@ -51,8 +57,10 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
     private StringUtil stringUtil = new StringUtil();
     private int choosePrice = 2;
     private int apartmentNum = 1;
+    private int starFlag = 0;
 
     private RecyclerView rvApartment;
+    private Button btnStar;
     private Button btnPhone;
     private Banner banner;
     private TextView houseTitle;
@@ -68,7 +76,10 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
     private boolean hasResult = false;
     private HouseInfo houseInfo;
     private List<NewHouseDetail> newHouseDetailList;
+    private List<HouseStar> houseStarList;
     private List<ApartmentEntity> apartmentEntityArrayList = new ArrayList<>();
+    private SharedPreferences share;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +87,17 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
         setContentView(R.layout.activity_new_house);
 
         banner = findViewById(R.id.banner);
+        btnStar = findViewById(R.id.btnStar);
         btnPhone = findViewById(R.id.btnPhone);
+        btnStar.setOnClickListener(this);
         btnPhone.setOnClickListener(this);
 
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         houseInfo = (HouseInfo) bundle.getSerializable(KEY_HOUSE);
+        share = getSharedPreferences("UserNow",
+                Context.MODE_PRIVATE);
+        uid = share.getString("uid", "");
 
         UrlUtil baseUrlUtil = new UrlUtil();
         baseUrlUtil.setType(type);
@@ -114,6 +130,12 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
                     @Override
                     public void run() {
                         if(hasResult){
+                            starFlag = newHouseDetailList.get(0).getIsStar();
+                            if(starFlag == 1) {
+                                Drawable drawable = ContextCompat.getDrawable(NewHouseActivity.this, R.drawable.star);
+                                btnStar.setBackground(drawable);
+                            }
+
                             String[] urls = stringUtil.spiltSemicolon(newHouseDetailList.get(0).getHouseImg());
                             initImg(urls);
 
@@ -245,9 +267,134 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
         }
     }
 
+    private boolean parseStarJSON(String jsonData) {
+        Gson gson = new Gson();
+        JsonData<HouseStar> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<HouseStar>>(){}.getType());
+        if(null == parseResult.getData() && parseResult.getStat()!=0 ) {
+            return false;
+        }else{
+            houseStarList = parseResult.getData();
+            return true;
+        }
+    }
+
+    private void doStar(String houseId) {
+        HouseStar houseStar = new HouseStar();
+        houseStar.setuId(uid);
+        houseStar.setHouseId(houseId);
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute("/star");
+        String url = baseUrlUtil.toString();
+
+        //使用Gson将对象转换为json字符串
+        Gson gson = new Gson();
+        String json = gson.toJson(houseStar);
+        //MediaType  设置Content-Type 标头中包含的媒体类型值
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8")
+                , json);
+
+        NetworkClient.postRequest(url, requestBody, new okhttp3.Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(NewHouseActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                int code = response.code();
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseStarJSON(responseJsonData);
+                Log.d("okhttp", "code: " + code);
+                Log.d("okhttp", "body: " + responseJsonData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            Drawable drawable = ContextCompat.getDrawable(NewHouseActivity.this, R.drawable.star);
+                            btnStar.setBackground(drawable);
+                            starFlag = 1;
+                            Toast.makeText(NewHouseActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                        }
+                        //  失败
+                        else{
+                            Toast.makeText(NewHouseActivity.this, "已收藏过", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
+    private void deleteStar(String uid, String houseId) {
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute("/deleteStar");
+        String url = baseUrlUtil.toString()+"?houseId="+houseId+"&uid="+uid;
+
+        NetworkClient.getRequest(url, new okhttp3.Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(NewHouseActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                int code = response.code();
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseStarJSON(responseJsonData);
+                Log.d("okhttp", "code: " + code);
+                Log.d("okhttp", "body: " + responseJsonData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            Drawable drawable = ContextCompat.getDrawable(NewHouseActivity.this, R.drawable.unstar);
+                            btnStar.setBackground(drawable);
+                            starFlag = 0;
+                            Toast.makeText(NewHouseActivity.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
+                        }
+                        //  失败
+                        else{
+                            Toast.makeText(NewHouseActivity.this, "取消失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btnStar :
+                if(starFlag == 0) {
+                    doStar(houseInfo.getId());
+                }
+                else {
+                    deleteStar(uid, houseInfo.getId());
+                }
+                break;
             case R.id.btnPhone :
                 Intent dialIntent =  new Intent(Intent.ACTION_DIAL);//跳转到拨号界面，同时传递电话号码
                 Uri data = Uri.parse("tel:" + newHouseDetailList.get(0).getUserTel());

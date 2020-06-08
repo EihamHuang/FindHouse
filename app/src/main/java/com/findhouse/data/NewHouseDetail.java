@@ -16,6 +16,15 @@ public class NewHouseDetail implements Serializable {
     private String uid;
     private String userName;
     private String userTel;
+    private int isStar;
+
+    public int getIsStar() {
+        return isStar;
+    }
+
+    public void setIsStar(int isStar) {
+        this.isStar = isStar;
+    }
 
     public String getHouseId() {
         return houseId;

@@ -10,7 +10,7 @@ import java.util.List;
 public class JsonData<T> {
 
     private List<T> data;
-    private String stat;
+    private int stat;
     private String msg;
 
     public List<T> getData() {
@@ -21,11 +21,11 @@ public class JsonData<T> {
         this.data = data;
     }
 
-    public String getStat() {
+    public int getStat() {
         return stat;
     }
 
-    public void setStat(String stat) {
+    public void setStat(int stat) {
         this.stat = stat;
     }
 
