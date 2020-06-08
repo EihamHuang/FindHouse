@@ -385,6 +385,14 @@ public class NewHouseActivity extends AppCompatActivity implements OnBannerListe
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("refresh","ok");
+        setResult(1,intent);
+        super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnStar :

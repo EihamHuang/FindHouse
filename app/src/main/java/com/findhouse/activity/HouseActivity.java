@@ -510,6 +510,14 @@ public class HouseActivity extends AppCompatActivity implements OnBannerListener
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("refresh","ok");
+        setResult(1,intent);
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         banner.startAutoPlay();//开始轮播

@@ -1,6 +1,7 @@
 package com.findhouse.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +38,7 @@ import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
 public class StarViewActivity extends AppCompatActivity {
     private String type = "/house";
     private String route = "/starList";
+    private int requestCode = 0;
 
     private List<HouseInfo> houseList = new ArrayList<>();
     private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
@@ -150,20 +152,27 @@ public class StarViewActivity extends AppCompatActivity {
                 if(houseInfo.getType().equals("新房")) {
                     Intent intent = new Intent(StarViewActivity.this, NewHouseActivity.class);
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    startActivityForResult(intent, requestCode);
                 }
                 else {
                     Intent intent = new Intent(StarViewActivity.this, HouseActivity.class);
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    startActivityForResult(intent, requestCode);
                 }
             }
 
         });
 
     }
-//    @Override
-//    protected void onResume(Bundle savedInstanceState) {
-//
-//    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==0){
+            if(resultCode==1){
+                initData();
+            }
+        }
+    }
+
 }
