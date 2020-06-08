@@ -50,8 +50,13 @@ public class StarViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_star_view);
-        context = this;
 
+        initData();
+
+    }
+
+    private void initData() {
+        context = this;
         share = getSharedPreferences("UserNow",
                 Context.MODE_PRIVATE);
         uid = share.getString("uid", "");
@@ -157,4 +162,8 @@ public class StarViewActivity extends AppCompatActivity {
         });
 
     }
+//    @Override
+//    protected void onResume(Bundle savedInstanceState) {
+//
+//    }
 }
