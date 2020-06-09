@@ -1,6 +1,7 @@
 package com.findhouse.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,36 +34,43 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.findhouse.adapter.GridViewAddImgesAdpter;
 import com.findhouse.data.HouseInfo;
+import com.findhouse.data.Image;
 import com.findhouse.data.JsonCity;
 import com.findhouse.data.JsonData;
+import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.GetJsonDataUtil;
 import com.findhouse.utils.StringUtil;
+import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.linchaolong.android.imagepicker.ImagePicker;
 import com.linchaolong.android.imagepicker.cropper.CropImage;
 import com.linchaolong.android.imagepicker.cropper.CropImageView;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PublishActivity extends AppCompatActivity implements View.OnClickListener  {
 
     public static final String KEY_HOUSE = "key_house";
     public static final String KEY_FROM = "key_from";
     public static final String KEY_TYPE = "key_type";
-    public static final String KEY_HOUSE_DETAIL = "key_house_detail";
 
-    private List<HouseInfo> houseList = new ArrayList<>();
-    private List<HouseInfo> houseListNew = new ArrayList<>();
-    private HashMap<String, Integer> stringIntegerHashMap = new HashMap<>();
     private boolean hasResult = false;
 
     private ArrayList<JsonCity> options1Items = new ArrayList<>(); //省
@@ -68,7 +78,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();//区
 
     private String type = "/house";
-    private String route = "/list";
+    private String route = "/insert";
 
     private String title = "";
     private int price = 0;
@@ -78,7 +88,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private String area = "";
     private String position = "";
     private String img = "";
-    private String detail = "";
+    private String des = "";
 
     private String houseApartment = "";
     private String houseArea = "";
@@ -96,11 +106,19 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private StringUtil stringUtil = new StringUtil();
 
     private TextView pickCity;
+    private EditText etTitle;
+    private EditText etPrice;
+    private EditText etArea;
+    private EditText etPosition;
+    private EditText etDes;
     private Button btnOk;
     private Button btnCancel;
 
     private GridView gw;
     private List<Map<String, Object>> datas;
+    private List<String> imageUrls = new ArrayList<>();
+    private List<String> newImageUrls = new ArrayList<>();
+    private List<String> newImageUrlsNew = new ArrayList<>();
     private GridViewAddImgesAdpter gridViewAddImgesAdpter;
     private Dialog dialog;
     private final int PHOTO_REQUEST_CAREMA = 1;// 拍照
@@ -120,8 +138,14 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_publish);
 
         share = getSharedPreferences("UserNow", Context.MODE_PRIVATE);
+        uid = share.getString("uid", "");
 
         pickCity = findViewById(R.id.pickCity);
+        etTitle = findViewById(R.id.etTitle);
+        etPrice = findViewById(R.id.etPrice);
+        etPosition = findViewById(R.id.etPosition);
+        etArea = findViewById(R.id.etArea);
+        etDes = findViewById(R.id.etDes);
         btnOk = findViewById(R.id.btnOk);
         btnCancel = findViewById(R.id.btnCancel);
 
@@ -172,12 +196,22 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private boolean parseJSON(String jsonData) {
         Gson gson = new Gson();
         JsonData<HouseInfo> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<HouseInfo>>(){}.getType());
+        if(parseResult.getStat()!=0) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    private boolean parseImgJSON(String jsonData) {
+        Gson gson = new Gson();
+        JsonData<String> parseResult = gson.fromJson(jsonData, new TypeToken<JsonData<String>>(){}.getType());
         if(null == parseResult.getData()) {
             return false;
         }else{
-            houseListNew = parseResult.getData();
-            houseListNew.removeAll(houseList);
-            houseList.addAll(houseListNew);
+            newImageUrlsNew = parseResult.getData();
+            newImageUrlsNew.removeAll(newImageUrls);
+            newImageUrls.addAll(newImageUrlsNew);
             return true;
         }
     }
@@ -279,7 +313,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
 
     /**
-     * 从相册获取2
+     * 从相册获取
      */
     public void gallery() {
         Intent intent = new Intent(
@@ -376,7 +410,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }.start();
 
     }
-    public static String saveBitmapToFile(String file, String newpath) {
+    public String saveBitmapToFile(String file, String newpath) {
         try {
             // BitmapFactory options to downsize the image
             BitmapFactory.Options o = new BitmapFactory.Options();
@@ -416,7 +450,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
 
             String filepath = aa.getAbsolutePath();
-            Log.e("getAbsolutePath", aa.getAbsolutePath());
+            imageUrls.add(filepath);
 
             return filepath;
         } catch (Exception e) {
@@ -431,6 +465,124 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         gridViewAddImgesAdpter.notifyDataSetChanged();
     }
 
+    private void doUpload() {
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType("/image");
+        baseUrlUtil.setRoute("/upload");
+        String url = baseUrlUtil.toString();
+
+        MediaType MEDIA_TYPE_PNG = MediaType.parse("multipart/form-data");
+
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+
+        for(String imageUrl : imageUrls) {
+            File f = new File(imageUrl);
+            builder.addFormDataPart("file", f.getName(), RequestBody.create(MEDIA_TYPE_PNG, f));
+        }
+
+        final MultipartBody requestBody = builder.build();
+
+        NetworkClient.postRequest(url, requestBody, new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PublishActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                int code = response.code();
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseImgJSON(responseJsonData);
+                Log.d("okhttp", "code: " + code);
+                Log.d("okhttp", "body: " + responseJsonData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            doUploadData();
+                        }
+                        //  失败
+                        else{
+                            Toast.makeText(PublishActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
+    private void doUploadData() {
+        HouseInfo houseInfo = new HouseInfo();
+        houseInfo.setTitle(title);
+        houseInfo.setType(houseType);
+        houseInfo.setPrice(price);
+        houseInfo.setCity(city);
+        houseInfo.setRegionInfo(region);
+        houseInfo.setAreaInfo(area);
+        houseInfo.setPositionInfo(position);
+        houseInfo.setDetail("https://bj.lianjia.com/");
+        houseInfo.setImg(newImageUrls.get(0));
+        houseInfo.setUid(uid);
+
+        UrlUtil baseUrlUtil = new UrlUtil();
+        baseUrlUtil.setType(type);
+        baseUrlUtil.setRoute(route);
+        String url = baseUrlUtil.toString();
+
+        Gson gson = new Gson();
+        //使用Gson将对象转换为json字符串
+        String json = gson.toJson(houseInfo);
+
+        //MediaType  设置Content-Type 标头中包含的媒体类型值
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8")
+                , json);
+
+        NetworkClient.postRequest(url, requestBody, new okhttp3.Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+
+                PublishActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PublishActivity.this, "网络请求错误，请重试～", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call,@NotNull Response response) throws IOException {
+                String responseJsonData = response.body().string();
+                // 解析json
+                hasResult = parseJSON(responseJsonData);
+                PublishActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(hasResult){
+                            Toast.makeText(PublishActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
+                        //  失败
+                        else{
+                            Toast.makeText(PublishActivity.this, "发布失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
@@ -438,10 +590,22 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 showPickerViewCity();
                 break;
             case R.id.btnOk :
+                title = etTitle.getText().toString();
+                area = etArea.getText().toString();
+                position = etPosition.getText().toString();
+                des = etDes.getText().toString();
+                if(etPrice.getText().toString()==null || title=="" || area=="" || position=="" || des==""
+                || city=="" || region=="") {
+                    Toast.makeText(PublishActivity.this, "请输入完所有内容", Toast.LENGTH_SHORT).show();
+                }else {
+                    price = Integer.valueOf(etPrice.getText().toString());
+                    doUpload();
+                }
                 break;
             case R.id.btnCancel :
                 onBackPressed();
                 break;
         }
     }
+
 }
