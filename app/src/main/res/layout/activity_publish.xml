@@ -50,7 +50,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_below="@id/etTitle"
                 android:inputType="number"
-                android:hint="价格"
+                android:hint="价格："
                 android:textSize="20sp"/>
 
             <LinearLayout
@@ -102,14 +102,36 @@
 
             <EditText
                 android:id="@+id/etDes"
-                android:layout_width="200dp"
+                android:layout_width="380dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_below="@id/etArea"
                 android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginRight="10dp"
                 android:hint="描述："
-                android:layout_below="@id/etArea"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_below="@id/etDes"
+                android:textSize="20sp"
+                android:text="图片："/>
+
+            <GridView
+                android:id="@+id/gw"
+                android:layout_below="@id/tvImg"
+                android:numColumns="5"
+                android:horizontalSpacing="30dp"
+                android:layout_marginTop="10dp"
+                android:columnWidth="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </GridView>
 
 
         </RelativeLayout>

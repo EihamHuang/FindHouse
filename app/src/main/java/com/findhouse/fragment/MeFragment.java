@@ -22,6 +22,7 @@ import com.findhouse.activity.LoginActivity;
 import com.findhouse.activity.ManageActivity;
 import com.findhouse.activity.OrderViewActivity;
 import com.findhouse.activity.PublishActivity;
+import com.findhouse.activity.PublishNewHouseActivity;
 import com.findhouse.activity.R;
 import com.findhouse.activity.ReleasedActivity;
 import com.findhouse.activity.StarViewActivity;
@@ -29,6 +30,8 @@ import com.findhouse.data.User;
 
 import java.util.ArrayList;
 
+import static com.findhouse.fragment.MainFragment.KEY_FROM;
+import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
 import static com.findhouse.fragment.MainFragment.KEY_TYPE;
 
 
@@ -41,6 +44,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
     private String houseType = "";
 
     private SharedPreferences share;
+    private Intent publishIntent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,8 +79,18 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 //返回的分别是三个级别的选中位置
                 houseType = typeList.get(options1);
                 Bundle bundle = new Bundle();
-                bundle.putString(KEY_TYPE, houseType);
-                Intent publishIntent =  new Intent(getContext(), PublishActivity.class);
+                if(houseType.equals("新房")) {
+                    bundle.putString(KEY_TYPE, "新房");
+                    publishIntent =  new Intent(getContext(), PublishNewHouseActivity.class);
+                }
+                else if(houseType.equals("租房")) {
+                    bundle.putString(KEY_TYPE, "租房");
+                    publishIntent =  new Intent(getContext(), PublishActivity.class);
+                }
+                else {
+                    bundle.putString(KEY_TYPE, "二手房");
+                    publishIntent =  new Intent(getContext(), PublishActivity.class);
+                }
                 publishIntent.putExtras(bundle);
                 startActivity(publishIntent);
             }

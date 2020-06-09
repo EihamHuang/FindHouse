@@ -3,6 +3,8 @@ package com.findhouse.utils;
 import android.app.Application;
 import android.content.Context;
 
+import androidx.multidex.MultiDex;
+
 import com.findhouse.activity.R;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
@@ -19,6 +21,10 @@ public class MyApplication extends Application {
      * 获取context
      * @return
      */
+    private MyApplication() {
+        MultiDex.install(this);
+    }
+
     public static Context getInstance() {
         if (mInstance == null) {
             mInstance = new MyApplication();
