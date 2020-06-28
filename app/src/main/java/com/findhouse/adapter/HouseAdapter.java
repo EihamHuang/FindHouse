@@ -17,7 +17,6 @@ import com.findhouse.activity.R;
 import com.findhouse.data.HouseInfo;
 import com.findhouse.utils.StringUtil;
 
-
 import java.util.List;
 
 public class HouseAdapter extends RecyclerView.Adapter {

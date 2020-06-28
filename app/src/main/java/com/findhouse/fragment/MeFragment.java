@@ -5,17 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-
-import androidx.fragment.app.Fragment;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.findhouse.activity.LoginActivity;
@@ -26,12 +19,9 @@ import com.findhouse.activity.PublishNewHouseActivity;
 import com.findhouse.activity.R;
 import com.findhouse.activity.ReleasedActivity;
 import com.findhouse.activity.StarViewActivity;
-import com.findhouse.data.User;
 
 import java.util.ArrayList;
 
-import static com.findhouse.fragment.MainFragment.KEY_FROM;
-import static com.findhouse.fragment.MainFragment.KEY_HOUSE;
 import static com.findhouse.fragment.MainFragment.KEY_TYPE;
 
 

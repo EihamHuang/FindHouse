@@ -2,7 +2,6 @@ package com.findhouse.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.findhouse.activity.NewsActivity;
 import com.findhouse.activity.R;
-import com.findhouse.network.ImageTask;
+import com.findhouse.adapter.NewsAdapter;
 import com.findhouse.data.JsonDataNews;
 import com.findhouse.data.News;
-import com.findhouse.adapter.NewsAdapter;
-import com.findhouse.utils.SpacesItemDecoration;
+import com.findhouse.network.ImageTask;
 import com.findhouse.network.NetworkClient;
+import com.findhouse.utils.SpacesItemDecoration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

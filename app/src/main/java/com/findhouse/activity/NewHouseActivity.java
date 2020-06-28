@@ -1,10 +1,5 @@
 package com.findhouse.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,15 +14,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.findhouse.adapter.ApartmentEntity;
-import com.findhouse.data.HouseStar;
-import com.findhouse.data.NewHouseDetail;
 import com.findhouse.data.HouseInfo;
+import com.findhouse.data.HouseStar;
 import com.findhouse.data.JsonData;
+import com.findhouse.data.NewHouseDetail;
 import com.findhouse.network.NetworkClient;
 import com.findhouse.utils.StringUtil;
 import com.findhouse.utils.UrlUtil;

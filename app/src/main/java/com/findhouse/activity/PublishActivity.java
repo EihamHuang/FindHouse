@@ -1,8 +1,5 @@
 package com.findhouse.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +8,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,10 +27,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.findhouse.adapter.GridViewAddImgesAdpter;
 import com.findhouse.data.HouseInfo;
-import com.findhouse.data.Image;
 import com.findhouse.data.JsonCity;
 import com.findhouse.data.JsonData;
 import com.findhouse.network.NetworkClient;
@@ -43,9 +40,6 @@ import com.findhouse.utils.StringUtil;
 import com.findhouse.utils.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.linchaolong.android.imagepicker.ImagePicker;
-import com.linchaolong.android.imagepicker.cropper.CropImage;
-import com.linchaolong.android.imagepicker.cropper.CropImageView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -95,8 +89,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private String houseFloor = "";
     private String houseFix = "";
     private String houseOrientation = "";
-    private String houseDes = "";
     private String houseInstall = "";
+
+    private String houseDes = "";
 
     private String uid = "";
     private String tel = "";

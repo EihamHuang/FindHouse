@@ -1,8 +1,6 @@
 package com.findhouse.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.transition.Transition;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-
 import com.bumptech.glide.request.RequestOptions;
-
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.findhouse.activity.R;
 import com.findhouse.data.News;
 

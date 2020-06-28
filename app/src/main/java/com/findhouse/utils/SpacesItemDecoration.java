@@ -2,7 +2,9 @@ package com.findhouse.utils;
 
 import android.graphics.Rect;
 import android.view.View;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.HashMap;
 
 /**
